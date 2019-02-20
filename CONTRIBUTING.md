@@ -4,7 +4,7 @@ This is an open source project, and we appreciate your help!
 
 We use the GitHub issue tracker to discuss new features and non-trivial bugs.
 
-When contributing to this repository, please first discuss the change you wish to make via issue, email, or any other method with the maintainers of this repository before making a change.
+When contributing to this repository, please first discuss the change you wish to make via issue, email, or any other method with the [MAINTAINERS](MAINTAINERS.md#maintainers-board) of this repository before making a change.
 
 ## Pull Requests 
 
