@@ -1,0 +1,29 @@
+language: go
+
+go:
+  - 1.11
+sudo: required
+services:
+  - docker
+env:
+
+
+before_install:
+
+
+install:
+
+
+before_script:
+
+
+script:
+
+
+notifications:
+  email: 
+    recipients:
+      - hengmzh@cn.ibm.com
+    on_success: never
+    on_failure: always
+  
