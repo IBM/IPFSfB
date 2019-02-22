@@ -1,6 +1,6 @@
 # InterPlanetary File System for Business (IPFSfB)
 
-[![Build Status](https://travis-ci.org/IBM/watson-online-store.svg?
+[![Build Status](https://api.travis-ci.org/IBM/IPFSfB.svg?
         branch=master)](https://travis-ci.org/IBM/IPFSfB)
 
 A BYFN (Build Your First Network) project.
