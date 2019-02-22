@@ -1,10 +1,11 @@
-# InterPlanetary File System for Business
+# InterPlanetary File System for Business (IPFSfB)
 
-A BYFN (Build Your First Network) Project.
+[![Build Status](https://travis-ci.org/IBM/watson-online-store.svg?
+        branch=master)](https://travis-ci.org/IBM/IPFSfB)
+
+A BYFN (Build Your First Network) project.
 
 This repository contains instructions to build a private blockchain network in InterPlanetary File System using IPFS utils with Docker and Docker Compose to provisioning storage networks and achieving consensus.
-
-Project inspired by CVI Blockchain Innovation Team.
 
 ## Overview
 
@@ -12,7 +13,7 @@ Project inspired by CVI Blockchain Innovation Team.
 
 ## Steps
 
-## Building Your First Network
+## Setting up the Network
 
 ## Runtime Instructions
 
