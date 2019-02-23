@@ -1,7 +1,7 @@
 language: go
 
 go:
-  - 1.11
+  - 1.11.x
 sudo: required
 services:
   - docker
@@ -21,9 +21,9 @@ script:
 
 
 notifications:
-  email: 
-    recipients:
-      - hengmzh@cn.ibm.com
-    on_success: never
-    on_failure: always
+  email: false
+    # recipients:
+    #   - hengmzh@cn.ibm.com
+    # on_success: never
+    # on_failure: always
   

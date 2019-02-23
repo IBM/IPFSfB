@@ -4,7 +4,7 @@
 
 A BYFN (Build Your First Network) project.
 
-This repository contains instructions to build a private blockchain network in InterPlanetary File System using IPFS utils with Docker and Docker Compose to provisioning storage networks and achieving consensus.
+This repository contains instructions to build a private blockchain network in InterPlanetary File System using IPFS utils with Docker and Docker Compose to provisioning distributed storage networks and achieving consensus.
 
 ## Overview
 
