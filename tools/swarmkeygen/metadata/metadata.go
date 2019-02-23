@@ -28,7 +28,7 @@ const Version = "0.1.0"
 const ProgramName = "swarmkeygen"
 
 // Show version infomation
-func getVersionInfo() string {
+func GetVersionInfo() string {
 	return fmt.Sprintf("%s:\n Version: %s\n Go version: %s\n OS/Arch: %s",
 		ProgramName, Version, runtime.Version(),
 		fmt.Sprintf("%s/%s", runtime.GOOS, runtime.GOARCH))

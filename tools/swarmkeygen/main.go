@@ -33,11 +33,11 @@ var exitCode = 0
 // Generate swarm key
 func doGenerate(length int) error {
 	log.Println("Generating new swarm key")
-	rndBytes, err := crypto.generateRandomBytes(32)
+	rndBytes, err := crypto.GenerateRandomBytes(32)
 	if err != nil {
 		fmt.Errorf("Could not read random source: %s", err)
 	}
-	key := encoder.parseRandomBytesToString(rndBytes)
+	key := encoder.ParseRandomBytesToString(rndBytes)
 	fmt.Println(key)
 	return nil
 }
@@ -67,5 +67,5 @@ func main() {
 
 // Print version information
 func printVersion() {
-	fmt.Println(metadata.getVersionInfo())
+	fmt.Println(metadata.GetVersionInfo())
 }

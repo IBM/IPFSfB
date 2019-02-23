@@ -21,7 +21,7 @@ import (
 )
 
 // Generate random bytes using crypto/rand.
-func generateRandomBytes(length int) ([]byte, error) {
+func GenerateRandomBytes(length int) ([]byte, error) {
 	rndBytes := make([]byte, length)
 	_, err := rand.Read(rndBytes)
 	return rndBytes, err

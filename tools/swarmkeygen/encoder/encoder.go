@@ -21,7 +21,7 @@ import (
 )
 
 // Parse random bytes to string using base64 encoding method.
-func parseRandomBytesToString(bytes []byte) string {
+func ParseRandomBytesToString(bytes []byte) string {
 	key := base64.StdEncoding.EncodeToString(bytes)
 	return key
 }
