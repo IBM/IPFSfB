@@ -20,6 +20,8 @@ import (
 	"flag"
 	"fmt"
 	"log"
+	"os"
+
 	"github.com/IBM/IPFSfB/tools/swarmkeygen/crypto"
 	"github.com/IBM/IPFSfB/tools/swarmkeygen/encoder"
 	"github.com/IBM/IPFSfB/tools/swarmkeygen/metadata"
