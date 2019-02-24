@@ -28,8 +28,8 @@ import (
 
 // Command line flags
 var (
-	genFlag     = flag.String("generate", "", "Generate key for connecting swarm nodes")
-	versionFlag = flag.String("version", "", "Show version information")
+	genFlag = flag.Bool("generate", false, "Generate key for connecting swarm nodes")
+	versionFlag = flag.Bool("version", false, "Show version information")
 )
 
 // Set key length
@@ -40,7 +40,7 @@ func main() {
 	flag.Parse()
 
 	// Generate key file
-	if *genFlag != "" {
+	if *genFlag {
 		key, err := generate(length)
 		if err != nil {
 			fmt.Printf("Error on generate: %s", err)
@@ -50,7 +50,7 @@ func main() {
 	}
 
 	// Show version
-	if *versionFlag != "" {
+	if *versionFlag {
 		printVersion()
 		os.Exit(0)
 	}
