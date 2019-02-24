@@ -17,52 +17,47 @@ limitations under the License.
 package main
 
 import (
-	"flag"
 	"fmt"
 	"os"
 
 	"github.com/IBM/IPFSfB/tools/swarmkeygen/crypto"
 	"github.com/IBM/IPFSfB/tools/swarmkeygen/encoder"
 	"github.com/IBM/IPFSfB/tools/swarmkeygen/metadata"
+
+	"gopkg.in/alecthomas/kingpin.v2"
 )
 
-// Command line flags
+// Command line setting
 var (
-	genFlag = flag.Bool("generate", false, "Generate key for connecting swarm nodes")
-	versionFlag = flag.Bool("version", false, "Show version information")
+	app = kingpin.New("swarmkeygen", "Utility of generating keys for IPFS node.")
+
+	genArg     = app.Command("generate", "Generate key for connecting swarm nodes.")
+	versionArg = app.Command("version", "Show version information.")
 )
 
 // Set key length
 var length = 32
 
 func main() {
-	// Parse inputs
-	flag.Parse()
-
-	// Generate key file
-	if *genFlag {
-		key, err := generate(length)
-		if err != nil {
-			fmt.Printf("Error on generate: %s", err)
-			os.Exit(-1)
-		}
-		fmt.Println(key)
-	}
-
-	// Show version
-	if *versionFlag {
+	switch kingpin.MustParse(app.Parse(os.Args[1:])) {
+	// "generate" command
+	case genArg.FullCommand():
+		generate(length)
+	// "version" command
+	case versionArg.FullCommand():
 		printVersion()
-		os.Exit(0)
 	}
 }
 
 // Generate swarm key
-func generate(length int) (string, error) {
-	rndBytes, err := crypto.GenerateRandomBytes(32)
+func generate(length int) {
+	rndBytes, err := crypto.GenerateRandomBytes(length)
 	if err != nil {
 		fmt.Printf("Could not read random source: %s", err)
+		os.Exit(-1)
 	}
-	return encoder.ParseRandomBytesToString(rndBytes), nil
+	key := encoder.ParseRandomBytesToString(rndBytes)
+	fmt.Println(key)
 }
 
 // Print version information
