@@ -33,7 +33,7 @@ var (
 
 	genArg     = app.Command("generate", "Generate key for connecting swarm nodes.")
 	versionArg = app.Command("version", "Show version information.")
-	lenFlag    = app.Flag("length", "The length of the key.").Required().Int()
+	lenFlag    = app.Flag("length", "The length of the key.").Default("32").Int()
 )
 
 func main() {
