@@ -19,7 +19,6 @@ package main
 import (
 	"flag"
 	"fmt"
-	"log"
 	"os"
 
 	"github.com/IBM/IPFSfB/tools/swarmkeygen/crypto"
@@ -27,42 +26,43 @@ import (
 	"github.com/IBM/IPFSfB/tools/swarmkeygen/metadata"
 )
 
-// Set exit code
-var exitCode = 0
+// Command line flags
+var (
+	genFlag = flag.Bool("generate", false, "Generate key for connecting swarm nodes")
+	versionFlag = flag.Bool("version", false, "Show version information")
+)
+
+// Set key length
+var length = 32
+
+func main() {
+	// Parse inputs
+	flag.Parse()
+
+	// Generate key file
+	if *genFlag {
+		key, err := generate(length)
+		if err != nil {
+			fmt.Printf("Error on generate: %s", err)
+			os.Exit(-1)
+		}
+		fmt.Println(key)
+	}
+
+	// Show version
+	if *versionFlag {
+		printVersion()
+		os.Exit(0)
+	}
+}
 
 // Generate swarm key
-func doGenerate(length int) (string, error) {
-	log.Println("Generating new swarm key")
+func generate(length int) (string, error) {
 	rndBytes, err := crypto.GenerateRandomBytes(32)
 	if err != nil {
 		fmt.Printf("Could not read random source: %s", err)
 	}
 	return encoder.ParseRandomBytesToString(rndBytes), nil
-}
-
-func main() {
-	var generate string
-
-	flag.StringVar(&generate, "generate", "", "generate key for connecting swarm nodes.")
-
-	version := flag.Bool("version", false, "show version information.")
-
-	flag.Parse()
-
-	if *version {
-		printVersion()
-		os.Exit(exitCode)
-	}
-
-	var length = 32
-
-	if generate != "" {
-		key, err := doGenerate(length)
-		if err != nil {
-			log.Fatalf("Error on generate: %s", err)
-		}
-		fmt.Println(key)
-	}
 }
 
 // Print version information
