@@ -33,16 +33,14 @@ var (
 
 	genArg     = app.Command("generate", "Generate key for connecting swarm nodes.")
 	versionArg = app.Command("version", "Show version information.")
+	lenFlag    = app.Flag("length", "The length of the key.").Default("32").Int()
 )
-
-// Set key length
-var length = 32
 
 func main() {
 	switch kingpin.MustParse(app.Parse(os.Args[1:])) {
 	// "generate" command
 	case genArg.FullCommand():
-		generate(length)
+		generate()
 	// "version" command
 	case versionArg.FullCommand():
 		printVersion()
@@ -50,8 +48,8 @@ func main() {
 }
 
 // Generate swarm key
-func generate(length int) {
-	rndBytes, err := crypto.GenerateRandomBytes(length)
+func generate() {
+	rndBytes, err := crypto.GenerateRandomBytes(*lenFlag)
 	if err != nil {
 		fmt.Printf("Could not read random source: %s", err)
 		os.Exit(-1)
