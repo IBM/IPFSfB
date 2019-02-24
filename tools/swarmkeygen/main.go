@@ -31,15 +31,13 @@ import (
 var exitCode = 0
 
 // Generate swarm key
-func doGenerate(length int) error {
+func doGenerate(length int) (string, error) {
 	log.Println("Generating new swarm key")
 	rndBytes, err := crypto.GenerateRandomBytes(32)
 	if err != nil {
-		fmt.Errorf("Could not read random source: %s", err)
+		fmt.Printf("Could not read random source: %s", err)
 	}
-	key := encoder.ParseRandomBytesToString(rndBytes)
-	fmt.Println(key)
-	return nil
+	return encoder.ParseRandomBytesToString(rndBytes), nil
 }
 
 func main() {
@@ -59,9 +57,11 @@ func main() {
 	var length = 32
 
 	if generate != "" {
-		if err := doGenerate(length); err != nil {
+		key, err := doGenerate(length)
+		if err != nil {
 			log.Fatalf("Error on generate: %s", err)
 		}
+		fmt.Println(key)
 	}
 }
 
