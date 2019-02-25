@@ -29,7 +29,7 @@ import (
 
 // Command line setting
 var (
-	app = kingpin.New("swarmkeygen", "Utility of IPFS node keys generating.")
+	app = kingpin.New("swarmkeygen", "Utility of IPFS node keys generation.")
 
 	genArg     = app.Command("generate", "Generate key for connecting swarm nodes.")
 	versionArg = app.Command("version", "Show version information.")
