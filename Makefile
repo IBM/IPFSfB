@@ -13,7 +13,7 @@
 # limitations under the License.
 
 BUILD_DIR ?= .build
-GO_VERSION = $(shell grep "GO_VER" ci.properties |cut -d'=' -f2-)
+GO_VERSION = $(shell grep -A1 'go:' .travis.yml | grep -v "go:" | cut -d'-' -f2- | cut -d' ' -f2-)
 EXECUTABLES ?= go docker git
 IMAGES = tools
 PACKAGES = swarmkeygen
@@ -28,6 +28,7 @@ DUMMY = .dummy-$(DOCKER_TAG)
 
 tools.swarmkeygen := $(PROJECT_PATH)/cmd/swarmkeygen
 
+.PHONY: docker-tools
 docker-tools: $(BUILD_DIR)/images/tools/$(DUMMY)
 
 .PHONY: swarmkeygen
