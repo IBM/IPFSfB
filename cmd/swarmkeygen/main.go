@@ -20,9 +20,9 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/IBM/IPFSfB/tools/swarmkeygen/crypto"
-	"github.com/IBM/IPFSfB/tools/swarmkeygen/encoder"
-	"github.com/IBM/IPFSfB/tools/swarmkeygen/metadata"
+	"github.com/IBM/IPFSfB/cmd/swarmkeygen/crypto"
+	"github.com/IBM/IPFSfB/cmd/swarmkeygen/encoder"
+	"github.com/IBM/IPFSfB/cmd/swarmkeygen/metadata"
 
 	"gopkg.in/alecthomas/kingpin.v2"
 )
