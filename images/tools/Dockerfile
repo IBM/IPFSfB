@@ -16,7 +16,6 @@ ARG GO_VERSION
 
 FROM golang:${GO_VERSION}-alpine as build
 RUN apk add --no-cache \
-        gcc \
         bash \
         git \
         make;
@@ -30,8 +29,10 @@ RUN make swarmkeygen
 
 FROM golang:${GO_VERSION}-alpine
 RUN apk add --no-cache \
+    gx \
+    gx-go \
     bash;
 ENV IPFS_PATH /data/ipfs
 VOLUME /data/ipfs
-COPY --from=tools /go/src/github.com/IBM/IPFSfB/.build/bin /usr/local/bin
+COPY --from=tools /go/src/github.com/IBM/IPFSfB/cmd /usr/local/bin
 EXPOSE 4001 5001 8080 8081

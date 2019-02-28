@@ -12,9 +12,17 @@
 # See the License for the specific language governing permissions and 
 # limitations under the License.
 
-BUILD_DIR ?= .build
+# -------------------------------------------------------------
+# This makefile defines the following targets
+#
+#   - all (default) - builds all targets and runs all non-integration tests/checks
+#	- swarmkeygen - builds a native swarmkeygen library
+#	- clean - cleans the build area
+
+BUILD_DIR ?= $(GOPATH)/src/$(PROJECT_PATH)
 GO_VERSION = $(shell grep -A1 'go:' .travis.yml | grep -v "go:" | cut -d'-' -f2- | cut -d' ' -f2-)
-EXECUTABLES ?= go docker git
+HASH_VERSION ?= $(shell git rev-parse --short HEAD)
+EXECUTABLES ?= go docker git curl
 IMAGES = tools
 PACKAGES = swarmkeygen
 ORG = IBM
@@ -26,10 +34,10 @@ PROJECT_VERSION=$(BASE_VERSION)-snapshot
 DOCKER_TAG = $(ARCH)-$(PROJECT_VERSION)
 DUMMY = .dummy-$(DOCKER_TAG)
 
-tools.swarmkeygen := $(PROJECT_PATH)/cmd/swarmkeygen
+pkgmap.swarmkeygen := $(PROJECT_PATH)/cmd/swarmkeygen
 
 .PHONY: docker-tools
 docker-tools: $(BUILD_DIR)/images/tools/$(DUMMY)
 
 .PHONY: swarmkeygen
-swarmkeygen: $(BUILD_DIR)/bin/swarmkeygen
+swarmkeygen: $(BUILD_DIR)/cmd/swarmkeygen
