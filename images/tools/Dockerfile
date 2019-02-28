@@ -14,7 +14,7 @@
 
 ARG GO_VERSION
 
-FROM golang:${GO_VERSION}-alpine as build
+FROM golang:${GO_VERSION}-alpine as builder
 RUN apk add --no-cache \
         bash \
         git \
@@ -22,17 +22,20 @@ RUN apk add --no-cache \
 
 ADD . $GOPATH/src/github.com/IBM/IPFSfB
 WORKDIR $GOPATH/src/github.com/IBM/IPFSfB
-ENV EXECUTABLES go git
+ENV EXECUTABLES go git curl
 
 FROM golang as tools
-RUN make swarmkeygen
+RUN go get -d -v github.com/IBM/IPFSfB/cmd/swarmkeygen
 
 FROM golang:${GO_VERSION}-alpine
 RUN apk add --no-cache \
     gx \
     gx-go \
+    go-ipfs \
     bash;
+
 ENV IPFS_PATH /data/ipfs
 VOLUME /data/ipfs
-COPY --from=tools /go/src/github.com/IBM/IPFSfB/cmd /usr/local/bin
+COPY --from=tools /go/src/github.com/IBM/IPFSfB/.build/bin /usr/local/bin
 EXPOSE 4001 5001 8080 8081
+ENTRYPOINT EXECUTABLES swarmkeygen 

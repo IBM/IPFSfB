@@ -48,3 +48,8 @@ services:
     networks: 
       - simple
 
+  cli:
+    container_name: cli
+    image: ipfsfb/ipfs-tools
+    
+

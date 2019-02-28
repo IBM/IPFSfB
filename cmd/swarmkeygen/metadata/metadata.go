@@ -27,6 +27,9 @@ const Version = "0.1.0"
 // ProgramName config
 const ProgramName = "swarmkeygen"
 
+// CommitSHA config
+var CommitSHA string
+
 // Show version infomation
 func GetVersionInfo() string {
 	return fmt.Sprintf("%s:\n Version: %s\n Go version: %s\n OS/Arch: %s",
