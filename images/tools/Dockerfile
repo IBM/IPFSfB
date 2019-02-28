@@ -12,22 +12,25 @@
 # See the License for the specific language governing permissions and 
 # limitations under the License.
 
-ARG GO_VERSION
+ARG GO_VER
 
-FROM golang:${GO_VERSION}-alpine as builder
+FROM golang:${GO_VER}-alpine as builder
 RUN apk add --no-cache \
-        bash \
         git \
+        bash \
         make;
 
 ADD . $GOPATH/src/github.com/IBM/IPFSfB
 WORKDIR $GOPATH/src/github.com/IBM/IPFSfB
 ENV EXECUTABLES go git curl
+RUN go get -d -v github.com/IBM/IPFSfB/cmd/swarmkeygen && \
+    go install
+
+ENTRYPOINT /go/bin/swarmkeygen
 
 FROM golang as tools
-RUN go get -d -v github.com/IBM/IPFSfB/cmd/swarmkeygen
 
-FROM golang:${GO_VERSION}-alpine
+FROM golang:${GO_VER}-alpine
 RUN apk add --no-cache \
     gx \
     gx-go \
@@ -36,6 +39,5 @@ RUN apk add --no-cache \
 
 ENV IPFS_PATH /data/ipfs
 VOLUME /data/ipfs
-COPY --from=tools /go/src/github.com/IBM/IPFSfB/.build/bin /usr/local/bin
+COPY --from=builder /go/src/github.com/IBM/IPFSfB/bin /usr/local/bin
 EXPOSE 4001 5001 8080 8081
-ENTRYPOINT EXECUTABLES swarmkeygen 

@@ -20,7 +20,8 @@
 #	- clean - cleans the build area
 
 BUILD_DIR ?= $(GOPATH)/src/$(PROJECT_PATH)
-GO_VERSION = $(shell grep -A1 'go:' .travis.yml | grep -v "go:" | cut -d'-' -f2- | cut -d' ' -f2-)
+GO_VER = $(shell grep -A1 'go:' .travis.yml | grep -v "go:" | cut -d'-' -f2- | cut -d' ' -f2-)
+GOBIN = $(shell pwd)/build/bin
 HASH_VERSION ?= $(shell git rev-parse --short HEAD)
 EXECUTABLES ?= go docker git curl
 IMAGES = tools
@@ -36,7 +37,7 @@ DUMMY = .dummy-$(DOCKER_TAG)
 
 pkgmap.swarmkeygen := $(PROJECT_PATH)/cmd/swarmkeygen
 
-.PHONY: docker-tools swarmkeygen
+.PHONY: all swarmkeygen docker-tools
 
 docker-tools:
 	$(BUILD_DIR)/images/tools/$(DUMMY)
