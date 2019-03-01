@@ -39,8 +39,8 @@ pkgmap.swarmkeygen := $(PROJECT_PATH)/cmd/swarmkeygen
 
 .PHONY: all swarmkeygen docker-tools
 
-docker-tools:
-	$(BUILD_DIR)/images/tools/$(DUMMY)
+# docker-tools:
+# 	$(BUILD_DIR)/images/tools/$(DUMMY)
 
 swarmkeygen: 
 	$(BUILD_DIR)/cmd/swarmkeygen

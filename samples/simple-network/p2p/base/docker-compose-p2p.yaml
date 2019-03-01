@@ -14,9 +14,6 @@
 
 version: '2'
 
-networks:
-  simple:
-
 services:
   peer0.example.com:
     container_name: peer0.example.com
@@ -29,9 +26,8 @@ services:
       - 4001:4001
       - 5001:5001
     volumes:
+      - /var/run/:/host/var/run/
       - peer0.example.com:/data/ipfs/peer
-    networks: 
-      - simple
 
   peer1.example.com:
     container_name: peer1.example.com
@@ -44,12 +40,7 @@ services:
       - 6001:6001
       - 7001:7001
     volumes:
+      - /var/run/:/host/var/run/
       - peer1.example.com:/data/ipfs/peer
-    networks: 
-      - simple
-
-  cli:
-    container_name: cli
-    image: ipfsfb/ipfs-tools
     
 
