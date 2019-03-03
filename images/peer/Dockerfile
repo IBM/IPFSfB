@@ -17,20 +17,16 @@ ARG ALPINE_VER
 
 FROM golang:${GO_VER}-alpine as builder
 RUN apk add --no-cache \
-        gcc \
-        musl-dev \
         git \
         bash \
         make;
 
-ADD . $GOPATH/src/github.com/IBM
-WORKDIR $GOPATH/src/github.com/IBM
-ENV EXECUTABLES go git
-RUN git clone https://github.com/IBM/IPFSfB && \
-    cd IPFSfB/ && \
-    go get ./cmd/swarmkeygen
+RUN go get -u github.com/ipfs/ipfs-update
+RUN ipfs-update install latest
 
-FROM alpine:${ALPINE_VER} as tools
+FROM alpine:${ALPINE_VER} as peer
 ENV IPFS_PATH /data/ipfs
 VOLUME /data/ipfs
-COPY --from=builder /go/bin/swarmkeygen /usr/local/bin
+COPY --from=builder /go/bin/go-ipfs /usr/local/bin
+EXPOSE 4001 5001 8080 8081
+CMD [ "ipfs", "daemon" ]

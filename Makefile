@@ -37,11 +37,11 @@ DUMMY = .dummy-$(DOCKER_TAG)
 
 pkgmap.swarmkeygen := $(PROJECT_PATH)/cmd/swarmkeygen
 
-# .PHONY: all swarmkeygen docker-tools
+.PHONY: all swarmkeygen docker-tools
 
 # docker-tools:
 # 	$(BUILD_DIR)/images/tools/$(DUMMY)
 
-# swarmkeygen: 
-# 	$(BUILD_DIR)/cmd/swarmkeygen
-# 	GO_LDFLAGS=-X $(pkgmap.$(@F))/metadata.CommitSHA=$(HASH_VERSION)
+swarmkeygen: 
+	GO_LDFLAGS=-X $(pkgmap.$(@F))/metadata.CommitSHA=$(HASH_VERSION)
+	go get -ldflags $(GO_LDFLAGS) ./cmd/swarmkeygen
