@@ -25,9 +25,13 @@ services:
     ports:
       - 4001:4001
       - 5001:5001
+      - 8080:8080
+      - 8081:8081
     volumes:
       - /var/run/:/host/var/run/
       - peer0.example.com:/data/ipfs/peer
+      - /tmp/ipfs-docker-staging:/export
+      - /tmp/ipfs-docker-data:/data/ipfs
 
   peer1.example.com:
     container_name: peer1.example.com
@@ -39,8 +43,12 @@ services:
     ports:
       - 6001:6001
       - 7001:7001
+      - 9080:9080
+      - 9081:9081
     volumes:
       - /var/run/:/host/var/run/
       - peer1.example.com:/data/ipfs/peer
+      - /tmp/ipfs-docker-staging:/export
+      - /tmp/ipfs-docker-data:/data/ipfs
     
 

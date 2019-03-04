@@ -45,7 +45,9 @@ services:
     stdin_open: true
     environment: 
       - GOPATH=/go
+      - IPFS_HOST=cli
       - CORE_VM_ENDPOINT=unix:///host/var/run/docker.sock
+      - IPFS_PATH=/data/ipfs
       - IPFS_LOGGING=INFO
       - IPFS_PROFILE=CLIENT
       - LIBP2P_FORCE_PNET=1

@@ -43,5 +43,5 @@ pkgmap.swarmkeygen := $(PROJECT_PATH)/cmd/swarmkeygen
 # 	$(BUILD_DIR)/images/tools/$(DUMMY)
 
 swarmkeygen: 
-	GO_LDFLAGS=-X $(pkgmap.$(@F))/metadata.CommitSHA=$(HASH_VERSION)
-	go get -ldflags $(GO_LDFLAGS) ./cmd/swarmkeygen
+	# GO_LDFLAGS=-X $(pkgmap.$(@F))/metadata.CommitSHA=$(HASH_VERSION)
+	go get ./cmd/swarmkeygen
