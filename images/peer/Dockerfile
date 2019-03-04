@@ -15,7 +15,11 @@
 ARG GO_VER
 ARG ALPINE_VER
 
-FROM golang:${GO_VER}-alpine as builder
+FROM golang:${GO_VER} as builder
+RUN go get -u github.com/ipfs/ipfs-update && \
+    ipfs-update install latest
+
+FROM alpine:${ALPINE_VER} as peer
 RUN apk add --no-cache \
         gcc \
         musl-dev \
@@ -23,13 +27,6 @@ RUN apk add --no-cache \
         bash \
         make;
 
-ADD . $GOPATH/bin
-WORKDIR $GOPATH/bin
-RUN go get -u github.com/ipfs/ipfs-update && \
-    ipfs-update install --no-check latest && \
-    ipfs init
-
-FROM alpine:${ALPINE_VER} as peer
 ENV IPFS_PATH /data/ipfs
 VOLUME /data/ipfs
 COPY --from=builder /go/bin/ipfs /usr/local/bin
