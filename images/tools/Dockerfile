@@ -19,6 +19,7 @@ FROM golang:${GO_VER}-alpine as builder
 RUN apk add --no-cache \
         gcc \
         musl-dev \
+        ca-certificates \
         git \
         bash \
         make;
@@ -28,9 +29,11 @@ WORKDIR $GOPATH/src/github.com/IBM
 ENV EXECUTABLES go git
 RUN git clone https://github.com/IBM/IPFSfB && \
     cd IPFSfB/ && \
-    go get ./cmd/swarmkeygen
+    go get ./cmd/swarmkeygen && \
+    go get -u github.com/ipfs/ipfs-update && \
+    ipfs-update install --no-check latest
 
 FROM alpine:${ALPINE_VER} as tools
 ENV IPFS_PATH /data/ipfs
 VOLUME /data/ipfs
-COPY --from=builder /go/bin/swarmkeygen /usr/local/bin
+COPY --from=builder /go/bin /usr/local/bin
