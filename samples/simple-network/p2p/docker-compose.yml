@@ -51,7 +51,7 @@ services:
       - IPFS_LOGGING=INFO
       - IPFS_PROFILE=CLIENT
       - LIBP2P_FORCE_PNET=1
-    working_dir: /go/src/github.com/ipfs/go-ipfs/peer
+    working_dir: /go/src/github.com/ipfsfb/p2p/peer
     command: /bin/sh
     volumes:
       - /var/run/:/host/var/run/
