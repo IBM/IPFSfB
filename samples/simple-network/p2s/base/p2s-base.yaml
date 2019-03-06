@@ -15,13 +15,10 @@
 version: '2'
 
 services:
-  p2p-base:
-    image: ipfsfb/ipfs-peer:$IMAGE_TAG
+  p2s-base:
     environment:
       - CORE_VM_ENDPOINT=unix:///host/var/run/docker.sock
       - CORE_VM_DOCKER_HOSTCONFIG_NETWORKMODE=${COMPOSE_PROJECT_NAME}_simple-network
       - IPFS_PATH=/data/ipfs
-      - IPFS_LOGGING=INFO
       - LIBP2P_FORCE_PNET=1
-    working_dir: /go/src/github.com/ipfsfb/p2p/peer
     command: ipfs daemon

@@ -25,7 +25,7 @@ RUN apk add --no-cache \
         make;
 
 ENV EXECUTABLES go git
-ENV IPFS_PROFILE client
+ENV IPFS_PROFILE server
 RUN go get -u github.com/ipfs/ipfs-update && \
     ipfs-update install --no-check latest && \
     ipfs init --profile=${IPFS_PROFILE}

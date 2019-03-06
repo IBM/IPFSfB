@@ -15,26 +15,26 @@
 version: '2'
 
 volumes:
-  peer0.example.com:
-  peer1.example.com:
+  peer.example.com:
+  server.example.com:
 
 networks: 
   simple:
 
 services: 
-  peer0.example.com:
+  peer.example.com:
     extends: 
-      file: base/docker-compose-p2p.yaml
-      service: peer0.example.com
-    container_name: peer0.example.com
+      file: base/docker-compose-p2s.yaml
+      service: peer.example.com
+    container_name: peer.example.com
     networks:
       - simple
 
-  peer1.example.com:
+  server.example.com:
     extends: 
-      file: base/docker-compose-p2p.yaml
-      service: peer1.example.com
-    container_name: peer1.example.com
+      file: base/docker-compose-p2s.yaml
+      service: server.example.com
+    container_name: server.example.com
     networks:
       - simple
 
@@ -50,12 +50,12 @@ services:
       - IPFS_PATH=/data/ipfs
       - IPFS_LOGGING=INFO
       - LIBP2P_FORCE_PNET=1
-    working_dir: /go/src/github.com/ipfsfb/p2p/cli
+    working_dir: /go/src/github.com/ipfsfb/p2s/cli
     command: /bin/sh
     volumes:
       - /var/run/:/host/var/run/
     depends_on: 
-      - peer0.example.com
-      - peer1.example.com
+      - peer.example.com
+      - server.example.com
     networks:
       - simple

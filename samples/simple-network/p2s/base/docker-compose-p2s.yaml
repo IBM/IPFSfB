@@ -1,0 +1,60 @@
+# Copyright 2019 IBM Corp.
+
+# Licensed under the Apache License, Version 2.0 (the "License"); 
+# you may not use this file except in compliance with the License. 
+# You may obtain a copy of the License at 
+
+#   http://www.apache.org/licenses/LICENSE-2.0 
+
+# Unless required by applicable law or agreed to in writing, software 
+# distributed under the License is distributed on an "AS IS" BASIS, 
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. 
+# See the License for the specific language governing permissions and 
+# limitations under the License.
+
+version: '2'
+
+services:
+  peer.example.com:
+    image: ipfsfb/ipfs-peer:$IMAGE_TAG
+    container_name: peer.example.com
+    extends:
+      file: p2s-base.yaml
+      service: p2s-base
+    environment: 
+      - IPFS_HOST=peer0.example.com
+      - IPFS_LOGGING=INFO
+    ports:
+      - 4001:4001
+      - 5001:5001
+      - 8080:8080
+      - 8081:8081
+    volumes:
+      - /var/run/:/host/var/run/
+      - peer.example.com:/data/ipfs/peer
+      - /tmp/ipfs-docker-staging:/export
+      - /tmp/ipfs-docker-data:/data/ipfs
+    working_dir: /go/src/github.com/ipfsfb/p2s/peer
+
+  server.example.com:
+    image: ipfsfb/ipfs-server:$IMAGE_TAG
+    container_name: server.example.com
+    extends:
+      file: p2s-base.yaml
+      service: p2s-base
+    environment: 
+      - IPFS_HOST=server.example.com
+      - IPFS_LOGGING=DEBUG
+    ports:
+      - 6001:6001
+      - 7001:7001
+      - 9080:9080
+      - 9081:9081
+    volumes:
+      - /var/run/:/host/var/run/
+      - server.example.com:/data/ipfs/peer
+      - /tmp/ipfs-docker-staging:/export
+      - /tmp/ipfs-docker-data:/data/ipfs
+    working_dir: /go/src/github.com/ipfsfb/p2s/server
+    
+
