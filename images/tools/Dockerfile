@@ -20,6 +20,9 @@ RUN apk add --no-cache \
         gcc \
         musl-dev \
         ca-certificates \
+        curl \
+        jq \
+        wget \
         git \
         bash \
         make;
@@ -31,7 +34,14 @@ RUN git clone https://github.com/IBM/IPFSfB && \
     cd IPFSfB/ && \
     go get ./cmd/swarmkeygen && \
     go get -u github.com/ipfs/ipfs-update && \
-    ipfs-update install --no-check latest
+    cd $GOPATH/src && \
+    mkdir go-ipfs && \
+    curl --silent "https://api.github.com/repos/ipfs/go-ipfs/releases/latest" | \
+    jq -r '.assets[0].browser_download_url'| \
+    wget -i - --no-check-certificate && \
+    tar xvfz *.tar.gz -C go-ipfs && \
+    cd go-ipfs/cmd/ipfs/dist && \
+    ./install.sh
 
 FROM alpine:${ALPINE_VER} as tools
 ENV IPFS_PATH /data/ipfs
