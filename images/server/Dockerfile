@@ -13,27 +13,32 @@
 # limitations under the License.
 
 ARG GO_VER
-ARG ALPINE_VER
 
 FROM golang:${GO_VER}-alpine as builder
 RUN apk add --no-cache \
         gcc \
         musl-dev \
-        ca-certificates \
         git \
         bash \
         make;
 
+ADD . $GOPATH/src/github.com/IBM/IPFSfB
+WORKDIR $GOPATH/src/github.com/IBM/IPFSfB
 ENV EXECUTABLES go git
+
+FROM golang:${GO_VER} as server
+ENV IPFS_PATH /data/ipfs
 ENV IPFS_PROFILE server
-RUN go get -u github.com/ipfs/ipfs-update && \
-    ipfs-update install --no-check latest && \
+VOLUME /data/ipfs
+RUN apt-get update && apt-get install -y jq && \
+    curl --silent "https://api.github.com/repos/ipfs/go-ipfs/releases/latest" | \
+    jq -r '.assets[21].browser_download_url'| \
+    wget -qi - && \
+    tar xvfz *.tar.gz && \
+    rm *.tar.gz && \
+    cd go-ipfs && \
+    ./install.sh && \
     ipfs init --profile=${IPFS_PROFILE}
 
-FROM alpine:${ALPINE_VER} as peer
-ENV IPFS_PATH /data/ipfs
-VOLUME /data/ipfs
-COPY --from=builder /go/bin/ipfs /usr/local/bin
-COPY --from=builder /go/bin/ipfs /usr/bin
 EXPOSE 4001 5001 8080 8081
 CMD [ "ipfs", "daemon" ]
