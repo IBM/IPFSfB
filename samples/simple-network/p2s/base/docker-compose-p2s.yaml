@@ -22,7 +22,7 @@ services:
       file: p2s-base.yaml
       service: p2s-base
     environment: 
-      - IPFS_HOST=peer0.example.com
+      - IPFS_HOST=peer.example.com
       - IPFS_LOGGING=INFO
     ports:
       - 4001:4001
@@ -31,10 +31,11 @@ services:
       - 8081:8081
     volumes:
       - /var/run/:/host/var/run/
-      - peer.example.com:/data/ipfs/peer
+      - peer.example.com:/.ipfs
       - /tmp/ipfs-docker-staging:/export
       - /tmp/ipfs-docker-data:/data/ipfs
     working_dir: /go/src/github.com/ipfsfb/p2s/peer
+    command: ipfs daemon
 
   server.example.com:
     image: ipfsfb/ipfs-server:$IMAGE_TAG
@@ -52,9 +53,10 @@ services:
       - 9081:9081
     volumes:
       - /var/run/:/host/var/run/
-      - server.example.com:/data/ipfs/peer
+      - server.example.com:/.ipfs
       - /tmp/ipfs-docker-staging:/export
       - /tmp/ipfs-docker-data:/data/ipfs
     working_dir: /go/src/github.com/ipfsfb/p2s/server
+    command: ipfs daemon --migrate=true
     
 

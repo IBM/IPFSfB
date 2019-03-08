@@ -39,21 +39,10 @@ services:
       - simple
 
   cli:
-    container_name: cli
-    image: ipfsfb/ipfs-tools:$IMAGE_TAG
-    tty: true
-    stdin_open: true
-    environment: 
-      - GOPATH=/go
-      - IPFS_HOST=cli
-      - CORE_VM_ENDPOINT=unix:///host/var/run/docker.sock
-      - IPFS_PATH=/data/ipfs
-      - IPFS_LOGGING=INFO
-      - LIBP2P_FORCE_PNET=1
+    extends:
+      file: ../common/docker-compose-cli.yaml
+      service: cli
     working_dir: /go/src/github.com/ipfsfb/p2s/cli
-    command: /bin/sh
-    volumes:
-      - /var/run/:/host/var/run/
     depends_on: 
       - peer.example.com
       - server.example.com

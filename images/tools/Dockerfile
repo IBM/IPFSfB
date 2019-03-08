@@ -13,6 +13,7 @@
 # limitations under the License.
 
 ARG GO_VER
+ARG ALPINE_VER
 
 FROM golang:${GO_VER}-alpine as builder
 RUN apk add --no-cache \
@@ -22,13 +23,16 @@ RUN apk add --no-cache \
         bash \
         make;
 
-ADD . $GOPATH/src/github.com/IBM/IPFSfB
-WORKDIR $GOPATH/src/github.com/IBM/IPFSfB
+ADD . $GOPATH/src/github.com/IBM
+WORKDIR $GOPATH/src/github.com/IBM
 ENV EXECUTABLES go git
+RUN git clone https://github.com/IBM/IPFSfB && \
+    cd IPFSfB/ && \
+    go get ./cmd/swarmkeygen
 
-FROM golang:${GO_VER} as tools
-ENV IPFS_PATH /data/ipfs
-VOLUME /data/ipfs
-RUN go get -u github.com/IBM/IPFSfB/cmd/swarmkeygen && \
-    go get -u github.com/ipfs/ipfs-update && \
-    ipfs-update install --no-check latest
+FROM alpine:${ALPINE_VER} as tools
+RUN apk add --no-cache \
+    bash;
+ENV IPFS_PATH /root/.ipfs
+VOLUME /root/.ipfs
+COPY --from=builder /go/bin /usr/local/bin
