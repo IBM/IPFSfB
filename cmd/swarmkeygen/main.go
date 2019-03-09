@@ -33,7 +33,7 @@ var (
 
 	genArg     = app.Command("generate", "Generate key for connecting swarm nodes.")
 	versionArg = app.Command("version", "Show version information.")
-	lenFlag    = app.Flag("length", "The length of the key.").Default("32").Int()
+	lenFlag    = app.Flag("length", "The length of the secret key, now only support 32 bytes (256 bits) key length.").Default("32").Int()
 )
 
 func main() {
@@ -56,7 +56,7 @@ func generate() {
 	}
 	key := encoder.ParseRandomBytesToString(rndBytes)
 	fmt.Println(metadata.PskHeader + "\n" + 
-				metadata.EncoderType + "\n" +
+				metadata.EncodingType + "\n" +
 				key)
 }
 

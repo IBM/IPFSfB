@@ -30,8 +30,8 @@ const ProgramName = "swarmkeygen"
 // PskHeader config
 const PskHeader = "/key/swarm/psk/1.0.0/"
 
-// EncoderType config
-const EncoderType = "/base64/"
+// EncodingType config
+const EncodingType = "/base64/"
 
 // CommitSHA config
 var CommitSHA string
