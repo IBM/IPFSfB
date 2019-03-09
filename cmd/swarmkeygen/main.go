@@ -55,9 +55,9 @@ func generate() {
 		os.Exit(-1)
 	}
 	key := encoder.ParseRandomBytesToString(rndBytes)
-	fmt.Println(metadata.PskHeader + "\n" + 
-				metadata.EncodingType + "\n" +
-				key)
+	fmt.Println(metadata.PskHeader + "\n" +
+		metadata.EncodingType + "\n" +
+		key)
 }
 
 // Print version information
