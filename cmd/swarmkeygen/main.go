@@ -29,7 +29,7 @@ import (
 
 // Command line setting
 var (
-	app = kingpin.New("swarmkeygen", "Utility of IPFS node keys generation.")
+	app = kingpin.New("swarmkeygen", "Utility of IPFS swarm node keys generation.")
 
 	genArg     = app.Command("generate", "Generate key for connecting swarm nodes.")
 	versionArg = app.Command("version", "Show version information.")
@@ -55,7 +55,9 @@ func generate() {
 		os.Exit(-1)
 	}
 	key := encoder.ParseRandomBytesToString(rndBytes)
-	fmt.Println(key)
+	fmt.Println(metadata.PskHeader + "\n" + 
+				metadata.EncoderType + "\n" +
+				key)
 }
 
 // Print version information
