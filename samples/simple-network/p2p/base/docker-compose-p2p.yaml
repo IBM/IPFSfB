@@ -29,7 +29,7 @@ services:
       - 8081:8081
     volumes:
       - /var/run/:/host/var/run/
-      - peer0.example.com:/root/.ipfs
+      - peer0.example.com:/var/ipfsfb/peer
       - /tmp/ipfs-docker-staging:/export
       - /tmp/ipfs-docker-data:/data/ipfs
 
@@ -47,8 +47,6 @@ services:
       - 9081:9081
     volumes:
       - /var/run/:/host/var/run/
-      - peer1.example.com:/root/.ipfs
+      - peer1.example.com:/var/ipfsfb/peer
       - /tmp/ipfs-docker-staging:/export
       - /tmp/ipfs-docker-data:/data/ipfs
-    
-

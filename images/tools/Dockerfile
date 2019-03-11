@@ -33,6 +33,6 @@ RUN git clone https://github.com/IBM/IPFSfB && \
 FROM alpine:${ALPINE_VER} as tools
 RUN apk add --no-cache \
     bash;
-ENV IPFS_PATH /root/.ipfs
-VOLUME /root/.ipfs
+ENV IPFS_PATH /var/ipfsfb
+VOLUME /var/ipfsfb
 COPY --from=builder /go/bin /usr/local/bin

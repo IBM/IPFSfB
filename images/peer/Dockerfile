@@ -27,9 +27,8 @@ WORKDIR $GOPATH/src/github.com/IBM/IPFSfB
 ENV EXECUTABLES go git
 
 FROM golang:${GO_VER} as peer
-ENV IPFS_PATH /root/.ipfs
-ENV IPFS_PROFILE local-discovery
-VOLUME /root/.ipfs
+ENV IPFS_PATH /var/ipfsfb
+VOLUME /var/ipfsfb
 RUN apt-get update && apt-get install -y jq && \
     curl --silent "https://api.github.com/repos/ipfs/go-ipfs/releases/latest" | \
     jq -r '.assets[21].browser_download_url'| \
@@ -37,8 +36,7 @@ RUN apt-get update && apt-get install -y jq && \
     tar xvfz *.tar.gz && \
     rm *.tar.gz && \
     cd go-ipfs && \
-    ./install.sh && \
-    ipfs init --profile=${IPFS_PROFILE}
-
+    ./install.sh
+    
 EXPOSE 4001 5001 8080 8081
 CMD [ "ipfs", "daemon" ]
