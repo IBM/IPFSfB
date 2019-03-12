@@ -42,10 +42,13 @@ function daemon () {
         echo "---- Swarm key file not found, ${MESSAGE} a default network. ----"
     else
         echo "---- ${MESSAGE} a private network with a swarm key file. ----"
-        export LIBP2P_FORCE_PNET=1
+        export $LIBP2P_FORCE_PNET
     fi
     ipfs daemon
 }
+
+# Set private network
+LIBP2P_FORCE_PNET=1
 
 # The arg of the command
 COMMAND=$1;shift
