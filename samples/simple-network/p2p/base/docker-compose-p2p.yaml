@@ -30,8 +30,6 @@ services:
     volumes:
       - /var/run/:/host/var/run/
       - peer0.example.com:/var/ipfsfb/peer
-      - /tmp/ipfs-docker-staging:/export
-      - /tmp/ipfs-docker-data:/data/ipfs
 
   peer1.example.com:
     container_name: peer1.example.com
@@ -48,5 +46,3 @@ services:
     volumes:
       - /var/run/:/host/var/run/
       - peer1.example.com:/var/ipfsfb/peer
-      - /tmp/ipfs-docker-staging:/export
-      - /tmp/ipfs-docker-data:/data/ipfs

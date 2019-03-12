@@ -15,34 +15,56 @@
 
 # This will ensure that we have the correct config path, and set init profile.
 export PATH=${PWD}:$PATH
-export IPFS_PROFILE=$2
-export IPFS_PATH=$3
 export IPFS_CONFIG=${IPFS_PATH}/config
+export SWARM_KEY_FILE=${IPFS_PATH}/swarm.key
 
 # Print the help message.
 function printHelper () {
     echo "Usage: "
-    echo "  config.sh init - initialize IPFS config if not already initialized."
+    echo "  config.sh init   - initialize IPFS config if not already initialized."
+    echo "  config.sh daemon - run IPFS daemon process for target network."
+    echo "Flags: "
+    echo "  -p <profile> - the IPFS profile for initialization."
+    echo "  --routing <routing> - overrides the routing option (defaults to default)."
 }
 
 # Check whether ipfs configuration file already exists.
 function init () {
-    if [ ! -s "$IPFS_CONFIG" ]; then
-        echo "---- No IPFS config found, initializing... ----"
-        if [ "$IPFS_PROFILE" == " " ]; then
-            ipfs init
-        else
-            ipfs init -p $IPFS_PROFILE
-        fi
+    if [ ! -e "$IPFS_CONFIG" ]; then
+        echo "---- No IPFS configuration file found, ${MESSAGE}... ----"
+        ipfs init
     fi
 }
 
-# The arg of the command
-MODE=$1;shift
+# Running IPFS daemon process.
+function daemon () {
+    if [ ! -e "$SWARM_KEY_FILE" ]; then
+        echo "---- Swarm key file not found, ${MESSAGE} a default network. ----"
+    else
+        echo "---- ${MESSAGE} a private network with a swarm key file. ----"
+        export LIBP2P_FORCE_PNET=1
+    fi
+    ipfs daemon
+}
 
-# Command
-if [ "${MODE}" == "init" ]; then
+# The arg of the command
+COMMAND=$1;shift
+
+# Command interface for message
+if [ "$COMMAND" == "init" ]; then
+    MESSAGE="Initializing"
+elif [ "$COMMAND" == "daemon" ]; then
+    MESSAGE="Starting"
+else
+    printHelper
+    exit 1
+fi
+
+# Command interface for execution
+if [ "${COMMAND}" == "init" ]; then
     init
+elif [ "${COMMAND}" == "daemon" ]; then
+    daemon
 else
     printHelper
     exit 1

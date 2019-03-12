@@ -24,8 +24,6 @@ services:
       - GOPATH=/go
       - IPFS_HOST=cli
       - CORE_VM_ENDPOINT=unix:///host/var/run/docker.sock
-      - IPFS_LOGGING=INFO
-      - LIBP2P_FORCE_PNET=1
     command: /bin/bash
     volumes:
       - /var/run/:/host/var/run/
