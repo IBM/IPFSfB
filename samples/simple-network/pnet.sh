@@ -15,25 +15,32 @@
 
 # Setting environment variable
 export PATH=${PWD}:$PATH
-export IPFS_PATH=${PWD}/../../build
+export IPFS_PATH=${PWD}/../../.build
 
 # Print the help message.
 function printHelper () {
     echo "Usage: "
-    echo "  pnet.sh <command> "
+    echo "  pnet.sh <command> <subcommand>"
+    echo "      <command> - one of 'start', 'stop' or 'restart'."
+    echo "          - 'start' - start and up the network with docker-compose up."
+    echo "          - 'stop' - stop and clear the network with docker-compose down."
+    echo "          - 'restart' - restart the network."
+    echo "      <subcommand> - networks type, <subcommand=p2p|p2s|p2sp>."
     echo "Flags: "
-    echo "  -p <profile> - the IPFS profile for initialization."
-    echo "  --routing <routing> - overrides the routing option (defaults to default)."
+    echo "  -n <network> - print all available network."
+    echo "  -i <imagetag> - the tag for the private network launch (defaults to latest)."
+    echo "  -f <composefile> - docker-compose file to be selected (defaults to docker-compose.yml)."
 }
 
 # Print all network.
 function printNetwork () {
     echo "Usage: "
-    echo "  pnet.sh start <subcommand> - start corresponding network based on user choice."
+    echo "  pnet.sh <command> <subcommand>"
+    echo "      <command> - <command=start|stop|restart> corresponding network based on user choice."
     echo "      <subcommand> - one of 'p2p', 'p2s', or 'p2sp'."
-    echo "          - 'p2p' - start a peer-to-peer based, private network."
-    echo "          - 'p2s' - start a peer-to-server based, private network."
-    echo "          - 'p2sp' - start a peer to server and to peer based, private network."
+    echo "          - 'p2p' - a peer-to-peer based, private network."
+    echo "          - 'p2s' - a peer-to-server based, private network."
+    echo "          - 'p2sp' - a peer to server and to peer based, private network."
     echo
     echo "Typically, one can bring up the network through subcommand e.g.:"
     echo
@@ -49,21 +56,21 @@ function generateKey () {
         exit 1
     fi
     echo "---- Generate swarm.key file using swarmkeygen tool. ----"
+    set -x
     swarmkeygen generate > $IPFS_PATH/swarm.key
     res=$?
-    set -x
+    set +x
     if [ $res -ne 0 ]; then
         echo "Failed to generate swarm.key file, exit."
         exit 1
     fi
-    set +x
 }
 
 # Create containers environment
 function createContainers () {
     echo "---- Creat containers for running IPFS. ----"
     for PEER in peer0.example.com peer1.example.com; do
-        docker-compose up --no-start $PEER
+        IMAGE_TAG=$IMAGETAG docker-compose -f $COMPOSE_FILE_P2P up --no-start $PEER
     done
 }
 
@@ -71,7 +78,9 @@ function createContainers () {
 function copySwarmKey () {
     echo "---- Copy swarm key file into the container file system. ----"
     for PEER in peer0.example.com peer1.example.com; do
+        set -x
         docker cp -a $IPFS_PATH/swarm.key $PEER:/var/ipfsfb
+        set +x
     done
 }
 
@@ -79,8 +88,10 @@ function copySwarmKey () {
 function startContainers () {
     echo "---- Start containers using secret swarm key. ----"
     for PEER in peer0.example.com peer1.example.com; do
-        docker-compose start $PEER
+        IMAGE_TAG=$IMAGETAG docker-compose -f $COMPOSE_FILE_P2P start $PEER
     done
+    echo "---- Sleeping 10s to allow network complete booting. ----"
+    sleep 10
 }
 
 # Set and switch to private network
@@ -95,7 +106,7 @@ function privateNetUp () {
     docker exec peer0.example.com ipfs bootstrap add $PEER_ADDR
 }
 
-# Start a peer to peer based network
+# Start and up a peer to peer based network
 function startP2p () {
     if [ -d "$IPFS_PATH" ]; then
         generateKey
@@ -111,15 +122,20 @@ function startP2p () {
     fi
 }
 
-# Start a peer to server based network
-function startP2s () {
-
+# Stop and clear peer to peer based network
+function stopP2p () {
+    docker-compose -f $COMPOSE_FILE_P2P down --volumes --remove-orphans
 }
+
+# Start a peer to server based network
+#function startP2s () {
+
+#}
 
 # Start a peer to server and to peer based network
-function startP2sp () {
+#function startP2sp () {
 
-}
+#}
 
 # Use default docker-compose file
 COMPOSE_FILE=docker-compose.yml
@@ -127,8 +143,28 @@ COMPOSE_FILE=docker-compose.yml
 COMPOSE_FILE_P2P=./p2p/${COMPOSE_FILE}
 COMPOSE_FILE_P2S=./p2s/${COMPOSE_FILE}
 COMPOSE_FILE_P2SP=./p2sp/${COMPOSE_FILE}
-# Set image tag (defaults to latest)
+# Set image tag
 IMAGETAG=latest
+
+# Options for running command
+while getopts "h?n?i:f:" opt; do
+    case "$opt" in
+        h | \?)
+            printHelper
+            exit 0
+            ;;
+        n)
+            printNetwork
+            exit 0
+            ;;
+        i)
+            IMAGETAG=$OPTARG
+            ;;
+        f)
+            COMPOSE_FILE=$OPTARG
+            ;;
+    esac
+done
 
 # The arg of the command
 COMMAND=$1;SUBCOMMAND=$2;shift
@@ -141,6 +177,17 @@ if [ "${COMMAND}" == "start" ]; then
         startP2s
     elif [ "${SUBCOMMAND}" == "p2sp" ]; then
         startP2sp
+    else
+        printNetwork
+        exit 1
+    fi
+elif [ "${COMMAND}" == "stop" ]; then
+    if [ "${SUBCOMMAND}" == "p2p" ]; then
+        stopP2p
+    elif [ "${SUBCOMMAND}" == "p2s" ]; then
+        stopP2s
+    elif [ "${SUBCOMMAND}" == "p2sp" ]; then
+        stopP2sp
     else
         printNetwork
         exit 1

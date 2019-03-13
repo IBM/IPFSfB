@@ -13,6 +13,10 @@
 # See the License for the specific language governing permissions and 
 # limitations under the License.
 
+# The file will ensure that each nodes (whether servers or peers) have different peer id.
+# This will be significant because we use different id to identify each peer or servers,
+# and connect them to one network.
+
 # This will ensure that we have the correct config path, and set init profile.
 export PATH=${PWD}:$PATH
 export IPFS_CONFIG=${IPFS_PATH}/config
@@ -42,13 +46,13 @@ function daemon () {
         echo "---- Swarm key file not found, ${MESSAGE} a default network. ----"
     else
         echo "---- ${MESSAGE} a private network with a swarm key file. ----"
-        export $LIBP2P_FORCE_PNET
+        export LIBP2P_FORCE_PNET=$PNET
     fi
     ipfs daemon
 }
 
 # Set private network
-LIBP2P_FORCE_PNET=1
+PNET=1
 
 # The arg of the command
 COMMAND=$1;shift
