@@ -24,6 +24,6 @@ services:
     working_dir: /go/src/github.com/ipfsfb/p2p/peer
     volumes:
       - ../../config.sh:/go/src/github.com/ipfsfb/p2p/peer/config.sh
-      - ../../ipfs/staging:/var/ipfsfb/staging
-      - ../../ipfs/data:/var/ipfsfb/data
-    command: bash -c "./config.sh init && ./config.sh daemon --routing=dhtclient"
+      - ../../.ipfs/staging:/var/ipfsfb/staging
+      - ../../.ipfs/data:/var/ipfsfb/data
+    command: bash -c "./config.sh init && ./config.sh daemon -r dhtclient"
