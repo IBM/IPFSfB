@@ -29,13 +29,12 @@ services:
       - 5001:5001
       - 8080:8080
       - 8081:8081
+    working_dir: /go/src/github.com/ipfsfb/p2s/peer
     volumes:
       - /var/run/:/host/var/run/
-      - peer.example.com:/.ipfs
-      - /tmp/ipfs-docker-staging:/export
-      - /tmp/ipfs-docker-data:/data/ipfs
-    working_dir: /go/src/github.com/ipfsfb/p2s/peer
-    command: ipfs daemon
+      - peer.example.com:/var/ipfsfb/peer
+      - ../../config.sh:/go/src/github.com/ipfsfb/p2s/peer/config.sh
+    command: bash -c "./config.sh init && ./config.sh daemon"
 
   server.example.com:
     image: ipfsfb/ipfs-server:$IMAGE_TAG
@@ -46,17 +45,17 @@ services:
     environment: 
       - IPFS_HOST=server.example.com
       - IPFS_LOGGING=DEBUG
+      - IPFS_PROFILE=server
     ports:
       - 6001:6001
       - 7001:7001
       - 9080:9080
       - 9081:9081
+    working_dir: /go/src/github.com/ipfsfb/p2s/server
     volumes:
       - /var/run/:/host/var/run/
-      - server.example.com:/.ipfs
-      - /tmp/ipfs-docker-staging:/export
-      - /tmp/ipfs-docker-data:/data/ipfs
-    working_dir: /go/src/github.com/ipfsfb/p2s/server
-    command: ipfs daemon --migrate=true
+      - server.example.com:/var/ipfsfb/server
+      - ../../config.sh:/go/src/github.com/ipfsfb/p2s/server/config.sh
+    command: bash -c "./config.sh init -p server && ./config.sh daemon -m"
     
 

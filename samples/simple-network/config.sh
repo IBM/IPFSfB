@@ -13,11 +13,16 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# The file will ensure that each nodes (whether servers or peers) have different peer id.
-# This will be significant because we use different id to identify each peer or servers,
-# and connect them to one network.
+# The file will ensure that 
+# 1) Each containers (whether servers or peers) have different peer id.
+# This will be significant because we use different id to identify each
+# peers or servers, and connect them to one network.
+# 2) Each containers can keep running in backend.
+# The function `ipfs init` will disrupt containers running in backend if
+# executed twice or above. By implementing config check, will keep containers
+# running healthily in backend even on restart.
 
-# This will ensure that we have the correct config path, and set init profile.
+# Set environment variable
 export PATH=${PWD}:$PATH
 export IPFS_CONFIG=${IPFS_PATH}/config
 export SWARM_KEY_FILE=${IPFS_PATH}/swarm.key
@@ -41,7 +46,7 @@ function init() {
 	fi
 }
 
-# Running IPFS daemon process.
+# Run IPFS daemon process.
 function daemon() {
 	if [ ! -e "$SWARM_KEY_FILE" ]; then
 		echo "---- Swarm key file not found, ${MESSAGE} a default network. ----"
