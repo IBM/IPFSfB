@@ -21,15 +21,16 @@ export IPFS_PATH=${PWD}/../../.build
 function printHelper() {
 	echo "Usage: "
 	echo "  pnet.sh <command> <subcommand>"
-	echo "      <command> - one of 'up', 'down' or 'restart'."
+	echo "      <command> - one of 'up', 'down', 'restart' or 'generate'."
 	echo "          - 'up' - start and up the network with docker-compose up."
 	echo "          - 'down' - stop and clear the network with docker-compose down."
 	echo "          - 'restart' - restart the network."
+	echo "			- 'generate' - generate swarm key file."
 	echo "      <subcommand> - network type, <subcommand=p2p|p2s|p2sp>."
 	echo "Flags: "
 	echo "  -n <network> - print all available network."
 	echo "  -i <imagetag> - the tag for the private network launch (defaults to latest)."
-	echo "  -f <composefile> - docker-compose file to be selected (defaults to docker-compose.yml)."
+	echo "  -f <docker-compose-file> - docker-compose file to be selected (defaults to docker-compose.yml)."
 }
 
 # Print all network.
@@ -57,7 +58,7 @@ function generateKey() {
 	fi
 	echo "---- Generate swarm.key file using swarmkeygen tool. ----"
 	set -x
-	swarmkeygen generate >$IPFS_PATH/swarm.key
+	swarmkeygen generate > $IPFS_PATH/swarm.key
 	res=$?
 	set +x
 	if [ $res -ne 0 ]; then
@@ -66,52 +67,153 @@ function generateKey() {
 	fi
 }
 
+# Docker-compose interface for create containers.
+function composeCreate () {
+	IMAGE_TAG=$IMAGETAG docker-compose -f $1 up --no-start $CONTAINER
+}
+
 # Create containers environment
 function createContainers() {
 	echo "---- Creat containers for running IPFS. ----"
-	for PEER in peer0.example.com peer1.example.com; do
-		IMAGE_TAG=$IMAGETAG docker-compose -f $COMPOSE_FILE_P2P up --no-start $PEER
-	done
+	if [ "$SUBCOMMAND" == "p2p" ]; then
+		for CONTAINER in peer0.example.com peer1.example.com; do
+			composeCreate "$COMPOSE_FILE_P2P"
+		done
+	elif [ "$SUBCOMMAND" == "p2s" ]; then
+		for CONTAINER in peer.example.com server.example.com; do
+			composeCreate "$COMPOSE_FILE_P2S"
+		done
+	else
+		for CONTAINER in peer0.example.com peer1.example.com server.example.com; do
+			composeCreate "$COMPOSE_FILE_P2SP"
+		done
+	fi
+}
+
+# Docker cp interface for copy swarm key
+function dockerCp() {
+	set -x
+	docker cp -a $IPFS_PATH/swarm.key $CONTAINER:/var/ipfsfb
+	set +x
 }
 
 # Copy swarm key file into container
 function copySwarmKey() {
 	echo "---- Copy swarm key file into the container file system. ----"
-	for PEER in peer0.example.com peer1.example.com; do
-		set -x
-		docker cp -a $IPFS_PATH/swarm.key $PEER:/var/ipfsfb
-		set +x
-	done
+	if [ "$SUBCOMMAND" == "p2p" ]; then
+		for CONTAINER in peer0.example.com peer1.example.com; do
+			dockerCp
+		done
+	elif [ "$SUBCOMMAND" == "p2s" ]; then
+		for CONTAINER in peer.example.com server.example.com; do
+			dockerCp
+		done
+	else
+		for CONTAINER in peer0.example.com peer1.example.com server.example.com; do
+			dockerCp
+		done
+	fi
+}
+
+# Docker-compose interface for start containers
+function composeStart () {
+	IMAGE_TAG=$IMAGETAG docker-compose -f $1 start $CONTAINER
 }
 
 # Start containers
 function startContainers() {
 	echo "---- Start containers using secret swarm key. ----"
-	for PEER in peer0.example.com peer1.example.com; do
-		IMAGE_TAG=$IMAGETAG docker-compose -f $COMPOSE_FILE_P2P start $PEER
-	done
+	if [ "$SUBCOMMAND" == "p2p" ]; then
+		for CONTAINER in peer0.example.com peer1.example.com; do
+			composeStart "$COMPOSE_FILE_P2P"
+		done
+	elif [ "$SUBCOMMAND" == "p2s" ]; then
+		for CONTAINER in peer.example.com server.example.com; do
+			composeStart "$COMPOSE_FILE_P2S"
+		done
+	else
+		for CONTAINER in peer0.example.com peer1.example.com server.example.com; do
+			composeStart "$COMPOSE_FILE_P2SP"
+		done
+	fi
 	echo "---- Sleeping 12s to allow network complete booting. ----"
 	sleep 12
 }
 
-# Set and switch to private network
+# Remove all default bootstrap nodes
+function removeBootstrap () {
+	docker exec $CONTAINER ipfs bootstrap rm --all
+}
+
+# Get containers ipfs address
+function getAddress() {
+	CONTAINER_ADDR=$(docker exec $CONTAINER ipfs id -f='<addrs>' | tail -n 1)
+}
+
+# Add bootstarp nodes for the network
+function addBootstrap () {
+	if [ "$CONTAINER" != "$CNAME" ]; then
+		docker exec $CNAME ipfs bootstrap add $CONTAINER_ADDR
+	fi
+}
+
+# Set and switch to private network, CONTAINER and CNAME are container alias
 function switchPrivateNet() {
 	echo "---- Configure the private network. ----"
-	for PEER in peer0.example.com peer1.example.com; do
-		docker exec $PEER ipfs bootstrap rm --all
-	done
-	PEER_ADDR=$(docker exec peer0.example.com ipfs id -f='<addrs>' | tail -n 1)
-	docker exec peer1.example.com ipfs bootstrap add $PEER_ADDR
-	PEER_ADDR=$(docker exec peer1.example.com ipfs id -f='<addrs>' | tail -n 1)
-	docker exec peer0.example.com ipfs bootstrap add $PEER_ADDR
+	if [ "$SUBCOMMAND" == "p2p" ]; then
+		for CONTAINER in peer0.example.com peer1.example.com; do
+			removeBootstrap
+		done
+		for CONTAINER in peer0.example.com peer1.example.com; do
+			getAddress
+			for CNAME in peer1.example.com peer0.example.com; do
+				addBootstrap
+			done
+		done
+	elif [ "$SUBCOMMAND" == "p2s" ]; then
+		for CONTAINER in peer.example.com server.example.com; do
+			removeBootstrap
+		done
+		for CONTAINER in peer.example.com server.example.com; do
+			getAddress
+			for CNAME in server.example.com peer.example.com; do
+				addBootstrap
+			done
+		done
+	else
+		for CONTAINER in peer0.example.com peer1.example.com server.example.com; do
+			removeBootstrap
+		done
+		for CONTAINER in peer0.example.com peer1.example.com server.example.com; do
+			getAddress
+			for CNAME in peer1.example.com server.example.com peer0.example.com; do
+				addBootstrap
+			done
+		done
+	fi
+}
+
+# Docker-compose interface for restart containers
+function composeRestart () {
+	IMAGE_TAG=$IMAGETAG docker-compose -f $1 restart $CONTAINER
 }
 
 # Restart containers for the private network.
 function restartContainers() {
 	echo "---- Restart containers for the configured private network. ----"
-	for PEER in peer0.example.com peer1.example.com; do
-		IMAGE_TAG=$IMAGETAG docker-compose -f $COMPOSE_FILE_P2P restart $PEER
-	done
+	if [ "$SUBCOMMAND" == "p2p" ]; then
+		for CONTAINER in peer0.example.com peer1.example.com; do
+			composeRestart "$COMPOSE_FILE_P2P"
+		done
+	elif [ "$SUBCOMMAND" == "p2s" ]; then
+		for CONTAINER in peer.example.com server.example.com; do
+			composeRestart "$COMPOSE_FILE_P2S"
+		done
+	else
+		for CONTAINER in peer0.example.com peer1.example.com server.example.com; do
+			composeRestart "$COMPOSE_FILE_P2SP"
+		done
+	fi
 }
 
 # General interface for up and running a private network.
@@ -126,11 +228,26 @@ function networkUp () {
 	fi
 }
 
+# Set and export environment variables from env file
+function setEnv() {
+	if [ "$SUBCOMMAND" == "p2p" ]; then
+		set -a
+		source $ENV_P2P
+		set +a
+	elif [ "$SUBCOMMAND" == "p2s" ]; then
+		set -a
+		source $ENV_P2S
+		set +a
+	else
+		set -a
+		source $ENV_P2SP
+		set +a
+	fi
+}
+
 # Start and up a peer to peer based private network
 function p2pUp() {
-	set -a
-	source $ENV_P2P
-	set +a
+	setEnv
 	networkUp
 	IMAGE_TAG=$IMAGETAG docker-compose -f $COMPOSE_FILE_P2P up -d --no-deps cli 2>&1
 	if [ $? -ne 0 ]; then
@@ -141,9 +258,7 @@ function p2pUp() {
 
 # Stop and clear peer to peer based private network
 function p2pDown() {
-	set -a
-	source $ENV_P2P
-	set +a
+	setEnv
 	# Bring down the private network, and remove volumes.
 	docker-compose -f $COMPOSE_FILE_P2P down --volumes --remove-orphans
 	if [ "$COMMAND" != "restart" ]; then
@@ -157,9 +272,7 @@ function p2pDown() {
 
 # Start and up a peer to server based private network
 function p2sUp () {
-	set -a
-	source $ENV_P2S
-	set +a
+	setEnv
 	networkUp
 	IMAGE_TAG=$IMAGETAG docker-compose -f $COMPOSE_FILE_P2S up -d --no-deps cli 2>&1
 	if [ $? -ne 0 ]; then
@@ -170,9 +283,7 @@ function p2sUp () {
 
 # Stop and clear peer to server based private network
 function p2sDown () {
-	set -a
-	source $ENV_P2S
-	set +a
+	setEnv
 	# Bring down the private network, and remove volumes.
 	docker-compose -f $COMPOSE_FILE_P2S down --volumes --remove-orphans
 	if [ "$COMMAND" != "restart" ]; then
@@ -187,14 +298,31 @@ function p2sDown () {
 }
 
 # Start and up a peer to server and to peer based private network
-#function p2spUp () {
-
-#}
+function p2spUp () {
+	setEnv
+	networkUp
+	IMAGE_TAG=$IMAGETAG docker-compose -f $COMPOSE_FILE_P2SP up -d --no-deps cli 2>&1
+	if [ $? -ne 0 ]; then
+		echo "ERROR!!! could not start p2s network, exit."
+		exit 1
+	fi
+}
 
 # Stop and clear peer to server and to peer based private network
-#function p2spDown () {
-
-#}
+function p2spDown () {
+	setEnv
+	# Bring down the private network, and remove volumes.
+	docker-compose -f $COMPOSE_FILE_P2SP down --volumes --remove-orphans
+	if [ "$COMMAND" != "restart" ]; then
+		docker run -v $PWD:/var/ipfsfb --rm ipfsfb/ipfs-tools:$IMAGETAG rm -rf /var/ipfsfb/peer /var/ipfsfb/server /var/ipfsfb/data /var/ipfsfb/staging
+		# Clean the network cache.
+		docker network prune -f
+		# Remove local ipfs config.
+		rm -rf .ipfs/data .ipfs/staging
+		# Remove unwanted key file generated by swarmkeygen tool.
+		rm -f $IPFS_PATH/*.key
+	fi
+}
 
 # Use default docker-compose file
 COMPOSE_FILE=docker-compose.yml
@@ -273,6 +401,8 @@ elif [ "${COMMAND}" == "restart" ]; then
 		printNetwork
 		exit 1
 	fi
+elif [ "${COMMAND}" == "generate" ]; then
+	generateKey
 else
 	printHelper
 	exit 1
