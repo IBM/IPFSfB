@@ -1,15 +1,15 @@
 # Copyright 2019 IBM Corp.
 
-# Licensed under the Apache License, Version 2.0 (the "License"); 
-# you may not use this file except in compliance with the License. 
-# You may obtain a copy of the License at 
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
 
-#   http://www.apache.org/licenses/LICENSE-2.0 
+#   http://www.apache.org/licenses/LICENSE-2.0
 
-# Unless required by applicable law or agreed to in writing, software 
-# distributed under the License is distributed on an "AS IS" BASIS, 
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. 
-# See the License for the specific language governing permissions and 
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
 # limitations under the License.
 
 version: '2'
@@ -20,7 +20,7 @@ services:
     extends:
       file: p2sp-peer-base.yaml
       service: p2sp-peer-base
-    environment: 
+    environment:
       - IPFS_HOST=peer0.example.com
     ports:
       - 4001:4001
@@ -36,7 +36,7 @@ services:
     extends:
       file: p2sp-peer-base.yaml
       service: p2sp-peer-base
-    environment: 
+    environment:
       - IPFS_HOST=peer1.example.com
     ports:
       - 6001:6001
@@ -46,13 +46,13 @@ services:
     volumes:
       - /var/run/:/host/var/run/
       - peer1.example.com:/var/ipfsfb/peer
-      
+
   server.example.com:
     container_name: server.example.com
     extends:
       file: p2sp-server-base.yaml
       service: p2sp-server-base
-    environment: 
+    environment:
       - IPFS_HOST=server.example.com
     ports:
       - 8001:8001
@@ -62,5 +62,3 @@ services:
     volumes:
       - /var/run/:/host/var/run/
       - server.example.com:/var/ipfsfb/server
-    
-

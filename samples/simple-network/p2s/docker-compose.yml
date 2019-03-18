@@ -1,15 +1,15 @@
 # Copyright 2019 IBM Corp.
 
-# Licensed under the Apache License, Version 2.0 (the "License"); 
-# you may not use this file except in compliance with the License. 
-# You may obtain a copy of the License at 
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
 
-#   http://www.apache.org/licenses/LICENSE-2.0 
+#   http://www.apache.org/licenses/LICENSE-2.0
 
-# Unless required by applicable law or agreed to in writing, software 
-# distributed under the License is distributed on an "AS IS" BASIS, 
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. 
-# See the License for the specific language governing permissions and 
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
 # limitations under the License.
 
 version: '2'
@@ -18,23 +18,23 @@ volumes:
   peer.example.com:
   server.example.com:
 
-networks: 
+networks:
   simple:
     ipam:
       config:
         - subnet: ${PUBLIC_DATA_NETWORKS}
 
-services: 
+services:
   peer.example.com:
-    extends: 
+    extends:
       file: base/docker-compose-p2s.yaml
       service: peer.example.com
     container_name: peer.example.com
     networks:
       - simple
-      
+
   server.example.com:
-    extends: 
+    extends:
       file: base/docker-compose-p2s.yaml
       service: server.example.com
     container_name: server.example.com
@@ -46,7 +46,7 @@ services:
       file: ../common/docker-compose-cli.yaml
       service: cli
     working_dir: /go/src/github.com/ipfsfb/p2s/cli
-    depends_on: 
+    depends_on:
       - peer.example.com
       - server.example.com
     networks:

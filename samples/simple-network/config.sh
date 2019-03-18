@@ -13,7 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# The file will ensure that 
+# The file will ensure that
 # 1) Each containers (whether servers or peers) have different peer id.
 # This will be significant because we use different id to identify each
 # peers or servers, and connect them to one network.
@@ -33,8 +33,8 @@ function printHelper() {
 	echo "  config.sh init - initialize IPFS config if not already initialized."
 	echo "  config.sh daemon - run IPFS daemon process for target network."
 	echo "Flags: "
-    echo "  -p <profile> - the IPFS profile for initialization (defaults to default-networking)."
-    echo "  -r <routing> - routing option for IPFS node (defaults to default)."
+	echo "  -p <profile> - the IPFS profile for initialization (defaults to default-networking)."
+	echo "  -r <routing> - routing option for IPFS node (defaults to default)."
 	echo "	-m <migrate> - option for auto repo migration (defaults to false)."
 }
 
