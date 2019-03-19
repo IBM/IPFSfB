@@ -16,26 +16,17 @@
 # This file contains serveral utils to help test end-to-end tests.
 
 # Set environment variable
-NETWORK=$1
-IPFS_PATH=/var/ipfsfb
 IPNS_PREFIX=/ipns
 PEER_CONFIG_PATH=${IPFS_PATH}/peer
 VALIDED_TIME=8760h
 
-PEER_SRC_PATH=/go/src/github.com/ipfsfb/p2p/peer/artifacts/
-if [ "$NETWORK" == "p2s"]; then
-    PEER_SRC_PATH=/go/src/github.com/ipfsfb/p2s/peer/artifacts/
-    SERVER_SRC_PATH=/go/src/github.com/ipfsfb/p2s/server/artifacts/
-else
-    PEER_SRC_PATH=/go/src/github.com/ipfsfb/p2sp/peer/artifacts/
-    SERVER_SRC_PATH=/go/src/github.com/ipfsfb/p2sp/server/artifacts/
-fi
-
+# Set file and web
 FILE_TYPE=txt
 WEB_TYPE=html
-FILE_NAME=text_example.${FILE_TYPE}
+FILE_NAME=file_example.${FILE_TYPE}
 WEB_NAME=web_example.${WEB_TYPE}
 
+# Verify execution result
 verifyResult() {
     if [ $1 -ne 0 ]; then
         echo "---- $2 ----"
@@ -46,6 +37,23 @@ verifyResult() {
     fi 
 }
 
+# Set enviroment and path
+setGlobals() {
+    NETWORK_TYPE=$1
+    if [ "$NETWORK_TYPE" == "p2p"]; then
+        NETWORK=p2p
+        PEER_SRC_PATH=/go/src/github.com/ipfsfb/p2p/peer/artifacts/
+    elif [ "$NETWORK_TYPE" == "p2s"]; then
+        NETWORK=p2s
+        PEER_SRC_PATH=/go/src/github.com/ipfsfb/p2s/peer/artifacts/
+        SERVER_SRC_PATH=/go/src/github.com/ipfsfb/p2s/server/artifacts/
+    else
+        NETWORK=p2sp
+        PEER_SRC_PATH=/go/src/github.com/ipfsfb/p2sp/peer/artifacts/
+        SERVER_SRC_PATH=/go/src/github.com/ipfsfb/p2sp/server/artifacts/
+}
+
+# Upload files to IPFS
 uploadFiles() {
     set -x
     if [ "$NETWORK" == "p2p"]; then
@@ -61,6 +69,7 @@ uploadFiles() {
     echo "---- Successful uploaded file ${FILE_NAME} to IPFS on ${IPFS_HOST} on the private network '$NETWORK'."
 }
 
+# View files from IPFS
 viewFiles() {
     set -x
     ipfs cat $HASH >&log.txt
@@ -71,6 +80,7 @@ viewFiles() {
     echo "---- View a file $HASH from IPFS on ${IPFS_HOST} on the private network '$NETWORK'."
 }
 
+# Download files from IPFS
 downloadFiles() {
     set -x
     ipfs get $HASH -o ${PEER_CONFIG_PATH}/${FILE_NAME} >&log.txt
@@ -81,6 +91,7 @@ downloadFiles() {
     echo "---- Successful downloaded a file ${FILE_NAME} from IPFS on ${IPFS_HOST} on the private network '$NETWORK'."
 }
 
+# Publish web to IPFS
 publishWeb() {
     set -x
     if [ "$NETWORK" == "p2p"]; then
@@ -107,9 +118,10 @@ publishWeb() {
     fi
 }
 
+# Query web content from IPFS
 queryWeb() {
     set -x
-    ipfs cat $IPFS_HASH/${WEB_NAME} >&log.txt
+    pup -f <(ipfs cat $IPFS_HASH/${WEB_NAME}) pre text{} >&log.txt
     res=$?
     set+x
     cat log.txt
@@ -117,7 +129,7 @@ queryWeb() {
     echo "---- Successful queried a web content $IPFS_HASH/${WEB_NAME} from IPFS on ${IPFS_HOST} on the private network '$NETWORK'."
     if [ "$NETWORK" != "p2p"]; then
         set -x
-        ipfs cat $IPNS_PREFIX/$IPNS_HASH >&log.txt
+        pup -f <(ipfs cat $IPNS_PREFIX/$IPNS_HASH) pre text{} >&log.txt
         res=$?
         set+x
         cat log.txt
@@ -125,3 +137,22 @@ queryWeb() {
         echo "---- Successful queried a web content $IPNS_PREFIX/$IPNS_HASH from IPNS on ${IPFS_HOST} on the private network '$NETWORK'."
     fi
 }
+
+# The arg of the command
+COMMAND=$1
+shift
+
+# Command interface for execution
+if [ "${COMMAND}" == "uploadFiles" ]; then
+	uploadFiles
+elif [ "${COMMAND}" == "viewFiles" ]; then
+	viewFiles
+elif [ "${COMMAND}" == "downloadFiles" ]; then
+    downloadFiles
+elif [ "${COMMAND}" == "publishWeb" ]; then
+    publishWeb
+elif [ "${COMMAND}" == "queryWeb" ]; then
+    queryWeb
+else
+	exit 1
+fi

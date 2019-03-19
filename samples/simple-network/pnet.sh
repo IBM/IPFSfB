@@ -254,6 +254,8 @@ function p2pUp() {
 		echo "ERROR!!! could not start p2p network, exit."
 		exit 1
 	fi
+	# run end to end tests
+	e2e/test.sh $SUBCOMMAND peer0.example.com peer1.example.com
 }
 
 # Stop and clear peer to peer based private network
@@ -279,6 +281,8 @@ function p2sUp() {
 		echo "ERROR!!! could not start p2s network, exit."
 		exit 1
 	fi
+	# run end to end tests
+	e2e/test.sh $SUBCOMMAND peer.example.com server.example.com
 }
 
 # Stop and clear peer to server based private network
@@ -306,6 +310,8 @@ function p2spUp() {
 		echo "ERROR!!! could not start p2s network, exit."
 		exit 1
 	fi
+	# run end to end tests
+	e2e/test.sh $SUBCOMMAND peer0.example.com peer1.example.com server.example.com
 }
 
 # Stop and clear peer to server and to peer based private network

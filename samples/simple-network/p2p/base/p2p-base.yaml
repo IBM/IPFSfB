@@ -21,10 +21,11 @@ services:
       - CORE_VM_ENDPOINT=unix:///host/var/run/docker.sock
       - CORE_VM_DOCKER_HOSTCONFIG_NETWORKMODE=${COMPOSE_PROJECT_NAME}_p2p
       - IPFS_LOGGING=INFO
-    working_dir: /go/src/github.com/ipfsfb/p2p/peer
+    working_dir: /opt/go/src/github.com/ipfsfb/p2p/peer
     volumes:
-      - ../../config.sh:/go/src/github.com/ipfsfb/p2p/peer/config.sh
-      - ../../artifacts:/go/src/github.com/ipfsfb/p2p/peer/artifacts
+      - ../../config.sh:/opt/go/src/github.com/ipfsfb/p2p/peer/config.sh
+      - ../../artifacts:/opt/go/src/github.com/ipfsfb/p2p/peer/artifacts
+      - ../../e2e:/opt/go/src/github.com/ipfsfb/p2p/peer/e2e
       - ../../.ipfs/staging:/var/ipfsfb/staging
       - ../../.ipfs/data:/var/ipfsfb/data
     command: bash -c "./config.sh init && ./config.sh daemon -r dhtclient"

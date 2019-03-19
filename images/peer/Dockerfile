@@ -29,7 +29,8 @@ ENV EXECUTABLES go git
 FROM golang:${GO_VER} as peer
 ENV IPFS_PATH /var/ipfsfb
 VOLUME /var/ipfsfb
-RUN apt-get update && apt-get install -y jq && \
+RUN go get github.com/ericchiang/pup && \
+    apt-get update && apt-get install -y jq && \
     curl --silent "https://api.github.com/repos/ipfs/go-ipfs/releases/latest" | \
     jq -r '.assets[21].browser_download_url'| \
     wget -qi - && \

@@ -33,8 +33,9 @@ services:
     volumes:
       - /var/run/:/host/var/run/
       - peer.example.com:/var/ipfsfb/peer
-      - ../../config.sh:/go/src/github.com/ipfsfb/p2s/peer/config.sh
-      - ../../artifacts:/go/src/github.com/ipfsfb/p2s/peer/artifacts
+      - ../../config.sh:/opt/go/src/github.com/ipfsfb/p2s/peer/config.sh
+      - ../../artifacts:/opt/go/src/github.com/ipfsfb/p2s/peer/artifacts
+      - ../../e2e:/opt/go/src/github.com/ipfsfb/p2s/peer/e2e
     command: bash -c "./config.sh init && ./config.sh daemon"
 
   server.example.com:
@@ -56,6 +57,7 @@ services:
     volumes:
       - /var/run/:/host/var/run/
       - server.example.com:/var/ipfsfb/server
-      - ../../config.sh:/go/src/github.com/ipfsfb/p2s/server/config.sh
-      - ../../artifacts:/go/src/github.com/ipfsfb/p2s/server/artifacts
+      - ../../config.sh:/opt/go/src/github.com/ipfsfb/p2s/server/config.sh
+      - ../../artifacts:/opt/go/src/github.com/ipfsfb/p2s/server/artifacts
+      - ../../e2e:/opt/go/src/github.com/ipfsfb/p2s/server/e2e
     command: bash -c "./config.sh init -p server && ./config.sh daemon -m"
