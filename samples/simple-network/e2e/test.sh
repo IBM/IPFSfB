@@ -15,15 +15,19 @@
 
 # A script to the end-to-end test for IPFS private network.
 
+echo "----------------------------------------------------------"
+echo "---- Now run end-to-end test for the private network. ----"
+echo "----------------------------------------------------------"
 echo " _____ ____  _____ "
 echo "| ____|___ \| ____|"
 echo "|  _|   __) |  _|  "
 echo "| |___ / __/| |___ "
 echo "|_____|_____|_____|"
 echo
-echo "----------------------------------------------------------"
-echo "---- Now run end-to-end test for the private network. ----"
-echo "----------------------------------------------------------"
+
+# Set local environment
+export PATH=${PWD}:$PATH
+export LOG_PATH=${PWD}/.ipfs/data
 
 # Set environment variable, CONTAINER, CNAME, and N are represent to each containers
 NETWORK=$1
@@ -31,49 +35,41 @@ CONTAINER=$2
 CNAME=$3
 N=$4
 
-# Import utils
-. e2e/utils.sh
-
-# Set utils environment
-setGlobals $NETWORK
-
 testFiles() {
     # Upload file
     echo "---- Uploading file to IPFS... ----"
-    docker exec $CONTAINER . uploadFiles
+    docker exec $CONTAINER e2e/utils.sh uploadFiles $NETWORK
     # View file
     echo "---- Viewing file from IPFS... ----"
-    docker exec $CNAME . viewFiles
-    # if containers are equal to 3, tests the third container
-    if [ ! -n "$N" ]; then
-        docker exec $N . viewFiles
+    docker cp -a $LOG_PATH/log.txt $CNAME:/var/ipfsfb/data
+    docker exec $CNAME e2e/utils.sh viewFiles $NETWORK
+    # if network is p2sp, tests the third container
+    if [ "$NETWORK" == "p2sp" ]; then
+        docker cp -a $LOG_PATH/log.txt $N:/var/ipfsfb/data
+        docker exec $N e2e/utils.sh viewFiles $NETWORK
     fi
     # Download file
     echo "---- Downloading file from IPFS... ----"
-    docker exec $CNAME . downloadFiles
-    # if containers are equal to 3, tests the third container
-    if [ ! -n "$N" ]; then
-        docker exec $N . downloadFiles
+    docker exec $CNAME e2e/utils.sh downloadFiles $NETWORK
+    # if network is p2sp, tests the third container
+    if [ "$NETWORK" == "p2sp" ]; then
+        docker exec $N e2e/utils.sh downloadFiles $NETWORK
     fi
-    res=$?
-    verifyResult $res "File tests failed."
-    echo "---- File tests passed on '$NETWORK'. ----"
 }
 
 testWebs() {
     # Publish web
     echo "---- Publishing web to IPFS... ----"
-    docker exec $CONTAINER . publishWeb
+    docker exec $CONTAINER e2e/utils.sh publishWeb $NETWORK
     # Query web content
     echo "---- Querying web content from IPFS... ----"
-    docker exec $CNAME . queryWeb
-    # if containers are equal to 3, tests the third container
-    if [ ! -n "$N" ]; then
-        docker exec $N . queryWeb
+    docker cp -a $LOG_PATH/log.txt $CNAME:/var/ipfsfb/data
+    docker exec $CNAME e2e/utils.sh queryWeb $NETWORK
+    # if network is p2sp, tests the third container
+    if [ "$NETWORK" == "p2sp" ]; then
+        docker cp -a $LOG_PATH/log.txt $N:/var/ipfsfb/data
+        docker exec $N e2e/utils.sh queryWeb $NETWORK
     fi
-    res=$?
-    verifyResult $res "Web tests failed."
-    echo "---- Web tests passed on '$NETWORK'. ----"
 }
 
 # Test file related operations
@@ -82,9 +78,5 @@ testFiles
 # Test web related operations
 echo "Testing web related operations..."
 testWebs
-
-echo "-------------------------------------------------------------------------"
-echo "---- All TESTS PASSED, running on a configured ipfs private network. ----"
-echo "-------------------------------------------------------------------------"
 
 exit 0
