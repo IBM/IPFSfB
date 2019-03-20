@@ -29,4 +29,4 @@ services:
       - ../../e2e:/opt/go/src/github.com/ipfsfb/p2sp/server/e2e
       - ../../.ipfs/staging:/var/ipfsfb/staging
       - ../../.ipfs/data:/var/ipfsfb/data
-    command: bash -c "./config.sh init -p server && ./config.sh config && ./config.sh daemon -m"
+    command: bash -c "./config.sh init -p server && ./config.sh daemon -m"

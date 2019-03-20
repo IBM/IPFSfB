@@ -138,7 +138,7 @@ function startContainers() {
 		done
 	fi
 	echo "---- Sleeping 12s to allow network complete booting. ----"
-	sleep 15
+	sleep 12
 }
 
 # Remove all default bootstrap nodes
