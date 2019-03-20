@@ -1,4 +1,5 @@
 #!/bin/bash
+
 # Copyright 2019 IBM Corp.
 
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -137,7 +138,7 @@ function startContainers() {
 		done
 	fi
 	echo "---- Sleeping 12s to allow network complete booting. ----"
-	sleep 12
+	sleep 15
 }
 
 # Remove all default bootstrap nodes

@@ -1,4 +1,5 @@
 #!/bin/bash
+
 # Copyright 2019 IBM Corp.
 
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -46,6 +47,27 @@ function init() {
 	fi
 }
 
+# Configure the api and gateway endpoint
+function config() {
+	# Grab current api address
+	CURRENT_API_ADDR=$(ipfs config Addresses.API | cut -d '/' -f3)
+	# Grab current gateway address
+	CURRENT_GATEWAY_ADDR=$(ipfs config Addresses.Gateway | cut -d '/' -f3)
+	# Compare addresses and change to global api and gateway
+	if [ "$CURRENT_API_ADDR" != "$GLOBAL_ADDR" ]; then
+		echo "---- ${MESSAGE} the api endpoint, defaults for the server. ----"
+		set -x
+		ipfs config Addresses.API $INTERNET_PRO/$GLOBAL_ADDR/$COMM_PRO/$API
+		set +x
+	fi
+	if [ "$CURRENT_GATEWAY_ADDR" != "$GLOBAL_ADDR" ]; then
+		echo "---- ${MESSAGE} the gateway endpoint, defaults for the server. ----"
+		set -x
+		ipfs config Addresses.Gateway $INTERNET_PRO/$GLOBAL_ADDR/$COMM_PRO/$GATEWAY
+		set +x
+	fi
+}
+
 # Run IPFS daemon process.
 function daemon() {
 	if [ ! -e "$SWARM_KEY_FILE" ]; then
@@ -67,6 +89,16 @@ PROFILE=default-networking
 ROUTING=default
 # Set repo migration
 MIGRATE=false
+# Set api port
+API=5001
+# Set gateway port
+GATEWAY=8080
+# Set global address
+GLOBAL_ADDR=0.0.0.0
+# Set communication protocol
+COMM_PRO=tcp
+# Set internet protocol
+INTERNET_PRO=/ip4
 
 # The arg of the command
 COMMAND=$1
@@ -96,6 +128,8 @@ if [ "$COMMAND" == "init" ]; then
 	MESSAGE="Initializing"
 elif [ "$COMMAND" == "daemon" ]; then
 	MESSAGE="Starting"
+elif [ "$COMMAND" == "config" ]; then
+	MESSAGE="Configuring"
 else
 	printHelper
 	exit 1
@@ -106,6 +140,8 @@ if [ "${COMMAND}" == "init" ]; then
 	init
 elif [ "${COMMAND}" == "daemon" ]; then
 	daemon
+elif [ "${COMMAND}" == "config" ]; then
+	config
 else
 	printHelper
 	exit 1

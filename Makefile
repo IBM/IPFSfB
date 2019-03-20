@@ -47,12 +47,16 @@ pkgmap.swarmkeygen := $(PROJECT_PATH)/cmd/swarmkeygen
 
 .PHONY: all swarmkeygen clean
 
-all:
-	go build -o $(GOBIN) -ldflags "$(GO_LDFLAGS)" ./cmd/swarmkeygen
+all: swarmkeygen ipfs
 
 swarmkeygen: 
 	GO_LDFLAGS=-X $(pkgmap.$(@F))/metadata.CommitSHA=$(COMMIT_VERSION)
-	go build -o $(GOBIN) -ldflags "$(GO_LDFLAGS)" $(pkgmap.$(@F))	
+	go get -ldflags "$(GO_LDFLAGS)" $(pkgmap.$(@F))	
+
+ipfs:
+	go get -ldflags "$(GO_LDFLAGS)" -u -d github.com/ipfs/go-ipfs
+	cd $(GOPATH)/src/github.com/ipfs/go-ipfs
+	make install
 
 clean:
 	rm -rf $(GOBIN)/*

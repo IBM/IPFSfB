@@ -60,4 +60,4 @@ services:
       - ../../config.sh:/opt/go/src/github.com/ipfsfb/p2s/server/config.sh
       - ../../artifacts:/opt/go/src/github.com/ipfsfb/p2s/server/artifacts
       - ../../e2e:/opt/go/src/github.com/ipfsfb/p2s/server/e2e
-    command: bash -c "./config.sh init -p server && ./config.sh daemon -m"
+    command: bash -c "./config.sh init -p server && ./config.sh config && ./config.sh daemon -m"
