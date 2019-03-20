@@ -1,15 +1,15 @@
 # Copyright 2019 IBM Corp.
 
-# Licensed under the Apache License, Version 2.0 (the "License"); 
-# you may not use this file except in compliance with the License. 
-# You may obtain a copy of the License at 
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
 
-#   http://www.apache.org/licenses/LICENSE-2.0 
+#   http://www.apache.org/licenses/LICENSE-2.0
 
-# Unless required by applicable law or agreed to in writing, software 
-# distributed under the License is distributed on an "AS IS" BASIS, 
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. 
-# See the License for the specific language governing permissions and 
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
 # limitations under the License.
 
 # -------------------------------------------------------------
@@ -17,31 +17,42 @@
 #
 #   - all (default) - builds all targets and runs all non-integration tests/checks
 #	- swarmkeygen - builds a native swarmkeygen library
+#	- go-ipfs - builds the infrastructure to run ipfs
 #	- clean - cleans the build area
+# -------------------------------------------------------------
 
-BUILD_DIR ?= $(GOPATH)/src/$(PROJECT_PATH)
+BASE_VERSION = 0.1.0
+IMAGE_VERSION = 0.1.0
+COMMIT_VERSION ?= $(shell git rev-parse --short HEAD)
+
+BUILD_DIR ?= $(shell pwd)/.build
+GOBIN = $(shell pwd)/.bin
 GO_VER = $(shell grep -A1 'go:' .travis.yml | grep -v "go:" | cut -d'-' -f2- | cut -d' ' -f2-)
-GOBIN = $(shell pwd)/build/bin
-HASH_VERSION ?= $(shell git rev-parse --short HEAD)
 EXECUTABLES ?= go docker git curl
-IMAGES = tools
+IMAGES = tools peer server
 PACKAGES = swarmkeygen
 ORG = IBM
 PROJECT_NAME = IPFSfB
 PROJECT_PATH = github.com/$(ORG)/$(PROJECT_NAME)
-BASE_VERSION = 0.1.0
-ARCH = $(shell go env GOARCH)
-PROJECT_VERSION=$(BASE_VERSION)-snapshot
-DOCKER_TAG = $(ARCH)-$(PROJECT_VERSION)
-DUMMY = .dummy-$(DOCKER_TAG)
+
+PROJECT_VER = ReleaseVersion=$(BASE_VERSION)
+PROJECT_VER += ImageVersion=$(IMAGE_VERSION)
+PROJECT_VER += CommitSHA=$(COMMIT_VERSION)
+
+GO_LDFLAGS = $(patsubst %, -X $(PROJECT_PATH)/release.%,$(PROJECT_VER))
+
+export GO_LDFLAGS
 
 pkgmap.swarmkeygen := $(PROJECT_PATH)/cmd/swarmkeygen
 
-.PHONY: all swarmkeygen docker-tools
+.PHONY: all swarmkeygen clean
 
-# docker-tools:
-# 	$(BUILD_DIR)/images/tools/$(DUMMY)
+all:
+	go build -o $(GOBIN) -ldflags "$(GO_LDFLAGS)" ./cmd/swarmkeygen
 
 swarmkeygen: 
-	# GO_LDFLAGS=-X $(pkgmap.$(@F))/metadata.CommitSHA=$(HASH_VERSION)
-	go get ./cmd/swarmkeygen
+	GO_LDFLAGS=-X $(pkgmap.$(@F))/metadata.CommitSHA=$(COMMIT_VERSION)
+	go build -o $(GOBIN) -ldflags "$(GO_LDFLAGS)" $(pkgmap.$(@F))	
+
+clean:
+	rm -rf $(GOBIN)/*
