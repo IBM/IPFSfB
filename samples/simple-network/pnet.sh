@@ -15,8 +15,8 @@
 # limitations under the License.
 
 # Set environment variable
-export PATH=${PWD}/../../.bin:${PWD}:$PATH
-export BUILD_PATH=${PWD}/../../.build
+export PATH=${PWD}/bin:${PWD}:$PATH
+export BUILD_PATH=${PWD}/build
 
 # Print the help message.
 function printHelper() {

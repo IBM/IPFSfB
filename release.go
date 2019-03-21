@@ -17,11 +17,12 @@ limitations under the License.
 package ipfsfb
 
 // Variables set in the Makefile with ldflags
-// Release version
+
+// ReleaseVersion config
 var ReleaseVersion = "0.1.0"
 
-// Image version
+// ImageVersion config
 var ImageVersion = "0.1.0"
 
-// Git commit
+// CommitSHA version config
 var CommitSHA string

@@ -17,7 +17,7 @@
 #
 #   - all (default) - builds all targets and runs all non-integration tests/checks
 #	- swarmkeygen - builds a native swarmkeygen library
-#	- go-ipfs - builds the infrastructure to run ipfs
+#	- ipfs - builds the go-ipfs library
 #	- clean - cleans the build area
 # -------------------------------------------------------------
 
@@ -44,6 +44,7 @@ GO_LDFLAGS = $(patsubst %, -X $(PROJECT_PATH)/release.%,$(PROJECT_VER))
 export GO_LDFLAGS
 
 pkgmap.swarmkeygen := $(PROJECT_PATH)/cmd/swarmkeygen
+pkgmap.ipfs        := github.com/ipfs/go-ipfs
 
 .PHONY: all swarmkeygen clean
 
@@ -53,9 +54,10 @@ swarmkeygen:
 	go get -ldflags "$(GO_LDFLAGS)" $(pkgmap.$(@F))	
 
 ipfs:
-	go get -ldflags "$(GO_LDFLAGS)" -u -d github.com/ipfs/go-ipfs
-	cd $(GOPATH)/src/github.com/ipfs/go-ipfs
+	go get -ldflags "$(GO_LDFLAGS)" -u -d $(pkgmap.$(@F))
+	mv $(GOPATH)/src/$(pkgmap.$(@F))/* $(GOPATH)/src/$(PROJECT_PATH)
 	make install
 
 clean:
-	rm -rf $(GOBIN)/ipfs $(GOBIN)/swarmkeygen
+	rm -f $(GOBIN)/ipfs $(GOBIN)/swarmkeygen
+	rm -rf $(GOPATH)/src/github.com/ipfs/go-ipfs

@@ -33,10 +33,7 @@ const PskHeader = "/key/swarm/psk/1.0.0/"
 // EncodingType config
 const EncodingType = "/base64/"
 
-// CommitSHA config
-var CommitSHA string
-
-// Show version infomation
+// GetVersionInfo function
 func GetVersionInfo() string {
 	return fmt.Sprintf("%s:\n Version: %s\n Go version: %s\n OS/Arch: %s",
 		ProgramName, Version, runtime.Version(),
