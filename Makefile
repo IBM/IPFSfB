@@ -26,7 +26,7 @@ IMAGE_VERSION = 0.1.0
 COMMIT_VERSION ?= $(shell git rev-parse --short HEAD)
 
 BUILD_DIR ?= $(shell pwd)/.build
-GOBIN = $(shell pwd)/.bin
+GOBIN = $(GOPATH)/bin
 GO_VER = $(shell grep -A1 'go:' .travis.yml | grep -v "go:" | cut -d'-' -f2- | cut -d' ' -f2-)
 EXECUTABLES ?= go docker git curl
 IMAGES = tools peer server
@@ -50,7 +50,6 @@ pkgmap.swarmkeygen := $(PROJECT_PATH)/cmd/swarmkeygen
 all: swarmkeygen ipfs
 
 swarmkeygen: 
-	GO_LDFLAGS=-X $(pkgmap.$(@F))/metadata.CommitSHA=$(COMMIT_VERSION)
 	go get -ldflags "$(GO_LDFLAGS)" $(pkgmap.$(@F))	
 
 ipfs:
@@ -59,4 +58,4 @@ ipfs:
 	make install
 
 clean:
-	rm -rf $(GOBIN)/*
+	rm -rf $(GOBIN)/ipfs $(GOBIN)/swarmkeygen
