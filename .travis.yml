@@ -20,19 +20,42 @@ sudo: required
 services:
   - docker
 env:
-
+  - PKG_VERSION=0.1.0
+  - IPFS_PATH=/var/ipfsfb
 
 before_install:
-
+  export TRAVIS_REPO_OWNER=${TRAVIS_REPO_SLUG%/*}
+  export TRAVIS_REPO_NAME=${TRAVIS_REPO_SLUG#*/}
 
 install:
-
+  docker pull ipfsfb/ipfs-peer:$PKG_VERSION
+  git clone https://github.com/ipfs/go-ipfs.git
+  cd go-ipfs
+  make install
+  cd ..
+  rm -rf go-ipfs
+  cd $GOPATH/src/github.com/$TRAVIS_REPO_OWNER/$TRAVIS_REPO_NAME
+  go get ./cmd/swarmkeygen
 
 before_script:
-
+  ipfs init --profile=default-networking
+  swarmkeygen generate > $IPFS_PATH/swarm.key
+  docker run -it --name peer0 -p 4001:4001 -p 5001:5001 -p 8080:8080 -p 8081:8081 ipfsfb/ipfs-peer
+  docker exec peer0 ipfs init --profile=default-networking
+  docker cp -a $IPFS_PATH/swarm.key peer0:/var/ipfsfb
 
 script:
+  TRAVIS_IPFS_ADDR=$(ipfs id -f='<addrs>' | tail -n 1)
+  docker exec peer0 ipfs bootstrap rm --all
+  docker exec peer0 ipfs bootstrap add $TRAVIS_IPFS_ADDR
+  PEER_ADDR=$(docker exec peer0 ipfs id -f='<addrs>' | tail -n 1)
+  ipfs bootstrap rm --all
+  ipfs bootstrap add $PEER_ADDR
+  docker exec peer0 ipfs daemon
+  ipfs daemon
 
+after_failure:
+  docker logs peer0
 
 notifications:
   email: false
@@ -40,4 +63,3 @@ notifications:
     #   - hengmzh@cn.ibm.com
     # on_success: never
     # on_failure: always
-  

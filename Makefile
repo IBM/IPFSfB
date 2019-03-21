@@ -34,6 +34,7 @@ PACKAGES = swarmkeygen
 ORG = IBM
 PROJECT_NAME = IPFSfB
 PROJECT_PATH = github.com/$(ORG)/$(PROJECT_NAME)
+IPFS_VERSION = latest
 
 PROJECT_VER = ReleaseVersion=$(BASE_VERSION)
 PROJECT_VER += ImageVersion=$(IMAGE_VERSION)
@@ -44,20 +45,19 @@ GO_LDFLAGS = $(patsubst %, -X $(PROJECT_PATH)/release.%,$(PROJECT_VER))
 export GO_LDFLAGS
 
 pkgmap.swarmkeygen := $(PROJECT_PATH)/cmd/swarmkeygen
-pkgmap.ipfs        := github.com/ipfs/go-ipfs
+pkgmap.ipfs        := github.com/ipfs
 
-.PHONY: all swarmkeygen clean
+.PHONY: all ipfs swarmkeygen clean
 
-all: swarmkeygen ipfs
-
-swarmkeygen: 
-	go get -ldflags "$(GO_LDFLAGS)" $(pkgmap.$(@F))	
+all: ipfs swarmkeygen
 
 ipfs:
-	go get -ldflags "$(GO_LDFLAGS)" -u -d $(pkgmap.$(@F))
-	mv $(GOPATH)/src/$(pkgmap.$(@F))/* $(GOPATH)/src/$(PROJECT_PATH)
-	make install
+	go get -ldflags "$(GO_LDFLAGS)" -u $(pkgmap.$(@F))/ipfs-update
+	ipfs-update install $(IPFS_VERSION)
+	rm -f $(GOBIN)/ipfs-update
+
+swarmkeygen: 
+	go get -ldflags "$(GO_LDFLAGS)" $(pkgmap.$(@F))
 
 clean:
 	rm -f $(GOBIN)/ipfs $(GOBIN)/swarmkeygen
-	rm -rf $(GOPATH)/src/github.com/ipfs/go-ipfs
