@@ -14,11 +14,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# The file will ensure that
-# 1) Each containers (whether servers or peers) have different peer id.
+# This script is only the script for running ipfs on Docker containers on all private network scenarios (p2p, p2s, and p2sp)
+# This script will ensure that
+# 1) Each containers (whether servers or peers) have different peer id
 # This will be significant because we use different id to identify each
 # peers or servers, and connect them to one network.
-# 2) Each containers can keep running in backend.
+# 2) Each containers can keep running in backend
 # The function `ipfs init` will disrupt containers running in backend if
 # executed twice or above. By implementing config check, will keep containers
 # running healthily in backend even on restart.

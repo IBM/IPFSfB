@@ -14,6 +14,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+# A script for running the private network, each of peer-to-peer, peer-to-server, and peer to peer and to server
+
 # Set environment variable
 export PATH=${PWD}/bin:${PWD}:$PATH
 export BUILD_PATH=${PWD}/build
