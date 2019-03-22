@@ -18,8 +18,6 @@
 
 # Match the latest image version if not specified
 export IMAGE_VERSION=0.1.0
-export ARCH=$(echo "$(uname -s|tr '[:upper:]' '[:lower:]'|sed 's/mingw64_nt.*/windows/')-$(uname -m | sed 's/x86_64/amd64/g')")
-export MARCH=$(uname -m)
 
 printHelper() {
     echo "Usage: "
@@ -37,20 +35,11 @@ printHelper() {
 
 # Check directory to install binaries
 DIR=$(basename $PWD)
-if [ "$DIR" == "scripts" ]; then
-    cd ..
-fi
 
-# If we are in the network directory, go to root and install it
-if [ "$PWD" == "$NETWORK" ]; then
-    echo "==== Install $NETWORK with bootstrap script in your root directory. ===="
-    echo
-    cd
-fi
-
-# Install in samples folder may cause 'folder already exist'
+# Install in samples folder may cause 'directory not empty'
 if [ "$DIR" == "samples" ]; then
-    echo "You should run this script in anywhere except the 'samples' folder."
+    echo
+    echo "You should run this script in anywhere except the 'samples' folder, exit."
     echo
     exit 1
 fi
@@ -175,6 +164,9 @@ while getopts "h?dbt" opt; do
             ;;
         b)
             BINARIES=false
+            ;;
+        t)
+            TOOLS=false
             ;;
     esac
 done
