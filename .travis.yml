@@ -33,7 +33,7 @@ install:
   cd go-ipfs
   make install
   cd ..
-  rm -rf go-ipfs
+  sudo rm -r go-ipfs -f
   cd $GOPATH/src/github.com/$TRAVIS_REPO_OWNER/$TRAVIS_REPO_NAME
   go get ./cmd/swarmkeygen
 
@@ -59,7 +59,3 @@ after_failure:
 
 notifications:
   email: false
-    # recipients:
-    #   - hengmzh@cn.ibm.com
-    # on_success: never
-    # on_failure: always

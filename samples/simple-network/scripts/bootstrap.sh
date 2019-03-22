@@ -14,7 +14,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# A script to download binaries and install environments for the simple network scenario
+# A script to download binaries and tools, and install docker containers for the simple network scenario
 
 # Match the latest image version if not specified
 export IMAGE_VERSION=0.1.0
@@ -34,6 +34,26 @@ printHelper() {
     echo "      bootstrap.sh 0.1.0"
     echo
 }
+
+# Check directory to install binaries
+DIR=$(basename $PWD)
+if [ "$DIR" == "scripts" ]; then
+    cd ..
+fi
+
+# If we are in the network directory, go to root and install it
+if [ "$PWD" == "$NETWORK" ]; then
+    echo "==== Install $NETWORK with bootstrap script in your root directory. ===="
+    echo
+    cd
+fi
+
+# Install in samples folder may cause 'folder already exist'
+if [ "$DIR" == "samples" ]; then
+    echo "You should run this script in anywhere except the 'samples' folder."
+    echo
+    exit 1
+fi
 
 dockerIPFSfBPull() {
     local IMAGE_TAG=$1
@@ -76,12 +96,13 @@ binaryDownload() {
         git checkout $BRANCH
         mv samples/${NETWORK}/* $PWD
         rm -rf samples
-        mkdir bin build .ipfs
+        mkdir bin .ipfs
         mv ${GOBIN}/swarmkeygen ${GOBIN}/ipfs $PWD/bin
     else
         echo "--------------------------------------------------------------------------------"
         echo "---- Permission denied for creating folder and downloading $NETWORK binary. ----"
         echo "--------------------------------------------------------------------------------"
+        exit 1
     fi
 }
 
