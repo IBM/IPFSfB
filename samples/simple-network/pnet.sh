@@ -354,7 +354,6 @@ ENV_P2SP=./p2sp/${ENV}
 # Set config path for travis
 DIR=$(basename $PWD)
 if [ "$DIR" != "$NETWORK" ]; then
-else
 	# Set networks docker-compose file for travis
 	COMPOSE_FILE_P2P=./samples/${NETWORK}/p2p/${COMPOSE_FILE}
 	COMPOSE_FILE_P2S=./samples/${NETWORK}/p2s/${COMPOSE_FILE}
