@@ -333,18 +333,33 @@ function p2spDown() {
 	fi
 }
 
+# Set the network
+NETWORK=simple-network
 # Use default docker-compose file
 COMPOSE_FILE=docker-compose.yml
-# Set networks docker-compose file
-COMPOSE_FILE_P2P=./p2p/${COMPOSE_FILE}
-COMPOSE_FILE_P2S=./p2s/${COMPOSE_FILE}
-COMPOSE_FILE_P2SP=./p2sp/${COMPOSE_FILE}
 # Environment file
 ENV=.env
-# Set environment variable for docker-compose file
-ENV_P2P=./p2p/${ENV}
-ENV_P2S=./p2s/${ENV}
-ENV_P2SP=./p2sp/${ENV}
+# Differentiate directory for travis and user
+DIR=$(basename $PWD)
+if [ "$DIR" == "$NETWORK" ]; then
+	# Set networks docker-compose file for user
+	COMPOSE_FILE_P2P=./p2p/${COMPOSE_FILE}
+	COMPOSE_FILE_P2S=./p2s/${COMPOSE_FILE}
+	COMPOSE_FILE_P2SP=./p2sp/${COMPOSE_FILE}
+	# Set environment variable for docker-compose file for user
+	ENV_P2P=./p2p/${ENV}
+	ENV_P2S=./p2s/${ENV}
+	ENV_P2SP=./p2sp/${ENV}
+else
+	# Set networks docker-compose file for travis
+	COMPOSE_FILE_P2P=./samples/$NETWORK/p2p/${COMPOSE_FILE}
+	COMPOSE_FILE_P2S=./samples/$NETWORK/p2s/${COMPOSE_FILE}
+	COMPOSE_FILE_P2SP=./samples/$NETWORK/p2sp/${COMPOSE_FILE}
+	# Set environment variable for docker-compose file travis
+	ENV_P2P=./samples/$NETWORK/p2p/${ENV}
+	ENV_P2S=./samples/$NETWORK/p2s/${ENV}
+	ENV_P2SP=./samples/$NETWORK/p2sp/${ENV}
+fi
 # Set image tag
 IMAGETAG=latest
 

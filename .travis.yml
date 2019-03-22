@@ -33,14 +33,13 @@ install:
   - |
     cd $GOPATH/src/github.com/$TRAVIS_REPO_OWNER/$TRAVIS_REPO_NAME
     make ipfs swarmkeygen
-    echo $(which swarmkeygen)
-    chmod +x samples/simple-network/scrips/bootstrap.sh
-    cd samples/simple-network/scrips
-    sudo ./bootstrap.sh $PKG_VERSION -b -t
+    chmod +x samples/simple-network/scripts/bootstrap.sh
+    sudo ./samples/simple-network/scripts/bootstrap.sh $PKG_VERSION -b -t
 
 before_script:
   - echo "Setting project environment path."
   - |
+    export COMPOSE_FILE_P2P=$PWD/samples/simple-network/
     export IPFS_PATH=/var/ipfsfb
     sudo mkdir -p $IPFS_PATH
     sudo chmod a+w $IPFS_PATH
@@ -49,11 +48,9 @@ script:
   - echo "Running scripts to test the simple network scenarios."
   - |
     chmod +x samples/simple-network/pnet.sh
-    cd samples/simple-network
-    echo $(which swarmkeygen)
-    sudo ./pnet.sh up p2p
-    sudo ./pnet.sh up p2s
-    sudo ./pnet.sh up p2sp
+    sudo ./samples/simple-network/pnet.sh up p2p
+    sudo ./samples/simple-network/pnet.sh up p2s
+    sudo ./samples/simple-network/pnet.sh up p2sp
 
 notifications:
   email: false
