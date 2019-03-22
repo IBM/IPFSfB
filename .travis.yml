@@ -49,7 +49,8 @@ script:
   - |
     ipfs init --profile=default-networking
     ipfs bootstrap rm --all
-    ipfs config show
+    TRAVIS_IPFS_ADDR=$(ipfs id -f='<addrs>' | tail -n 1)
+    echo $TRAVIS_IPFS_ADDR
     swarmkeygen generate > $IPFS_PATH/swarm.key
     cat $IPFS_PATH/swarm.key
 
