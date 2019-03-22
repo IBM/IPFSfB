@@ -14,7 +14,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# This script is only the script for running ipfs on Docker containers on all private network scenarios (p2p, p2s, and p2sp)
+# This script is only the script for running ipfs on Docker containers on all simple network scenarios (p2p, p2s, and p2sp)
 # This script will ensure that
 # 1) Each containers (whether servers or peers) have different peer id
 # This will be significant because we use different id to identify each

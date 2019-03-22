@@ -30,7 +30,7 @@ GOBIN = $(GOPATH)/bin
 GO_VER = $(shell grep -A1 'go:' .travis.yml | grep -v "go:" | cut -d'-' -f2- | cut -d' ' -f2-)
 EXECUTABLES ?= go docker git curl
 IMAGES = tools peer server
-PACKAGES = swarmkeygen
+PACKAGES = ipfs swarmkeygen
 ORG = IBM
 PROJECT_NAME = IPFSfB
 PROJECT_PATH = github.com/$(ORG)/$(PROJECT_NAME)
@@ -58,7 +58,7 @@ ipfs:
 	rm -rf $(GOPATH)/src/$(pkgmap.$(@F))/ipfs-update
 
 swarmkeygen: 
-	go get -ldflags "$(GO_LDFLAGS)" $(pkgmap.$(@F))
+	go get -ldflags "$(GO_LDFLAGS)" -u $(pkgmap.$(@F))
 
 clean:
 	rm -f $(GOBIN)/ipfs $(GOBIN)/swarmkeygen

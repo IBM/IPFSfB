@@ -14,7 +14,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# A script to download binaries and tools, and install docker images for the simple network scenario
+# A script to download binaries and tools, and install docker images for the simple network scenarios
 
 # Match the latest image version if not specified
 export IMAGE_VERSION=0.1.0
@@ -110,7 +110,7 @@ binaryInstall() {
 
 toolDownload() {
     if [ -n "$GOPATH" ]; then
-        go get $PROJECT_PATH/cmd/swarmkeygen
+        go get -u $PROJECT_PATH/cmd/swarmkeygen
     else
         echo "----------------------------------------------------------------------------"
         echo "----- GOPATH is not set, bypassing download of IPFSfB $NETWORK tools. ------"

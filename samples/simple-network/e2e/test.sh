@@ -14,7 +14,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# A script to the end-to-end test for all private network scenarios (p2p, p2s, p2sp)
+# A script to the end-to-end test for all simple network scenarios (p2p, p2s, p2sp)
 
 echo "----------------------------------------------------------"
 echo "---- Now run end-to-end test for the private network. ----"
