@@ -45,12 +45,13 @@ before_script:
     sudo chmod a+w $IPFS_PATH
 
 script:
-  - echo "Running scripts to test the simple network scenarios."
+  - echo "Test functions for each command line tools."
   - |
-    chmod +x samples/simple-network/pnet.sh
-    sudo ./samples/simple-network/pnet.sh up p2p
-    sudo ./samples/simple-network/pnet.sh up p2s
-    sudo ./samples/simple-network/pnet.sh up p2sp
+    ipfs init --profile=default-networking
+    ipfs bootstrap rm --all
+    ipfs config show
+    swarmkeygen generate > $IPFS_PATH/swarm.key
+    cat $IPFS_PATH/swarm.key
 
 notifications:
   email: false

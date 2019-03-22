@@ -258,9 +258,7 @@ function p2pUp() {
 		exit 1
 	fi
 	# Run end to end tests
-	if [ "$DIR" == "$NETWORK" ]; then
-		$E2E_TEST $SUBCOMMAND peer0.example.com peer1.example.com
-	fi
+	$E2E_TEST $SUBCOMMAND peer0.example.com peer1.example.com
 }
 
 # Stop and clear peer to peer based private network
@@ -287,9 +285,7 @@ function p2sUp() {
 		exit 1
 	fi
 	# Run end to end tests
-	if [ "$DIR" == "$NETWORK" ]; then
-		$E2E_TEST $SUBCOMMAND server.example.com peer.example.com
-	fi
+	$E2E_TEST $SUBCOMMAND server.example.com peer.example.com
 }
 
 # Stop and clear peer to server based private network
@@ -318,9 +314,7 @@ function p2spUp() {
 		exit 1
 	fi
 	# Run end to end tests
-	if [ "$DIR" == "$NETWORK" ]; then
-		$E2E_TEST $SUBCOMMAND server.example.com peer0.example.com peer1.example.com
-	fi
+	$E2E_TEST $SUBCOMMAND server.example.com peer0.example.com peer1.example.com
 }
 
 # Stop and clear peer to server and to peer based private network
@@ -357,18 +351,6 @@ COMPOSE_FILE_P2SP=./p2sp/${COMPOSE_FILE}
 ENV_P2P=./p2p/${ENV}
 ENV_P2S=./p2s/${ENV}
 ENV_P2SP=./p2sp/${ENV}
-# Set config file path for travis
-DIR=$(basename $PWD)
-if [ "$DIR" != "$NETWORK" ]; then
-	# Set networks docker-compose file for travis
-	COMPOSE_FILE_P2P=./samples/${NETWORK}/p2p/${COMPOSE_FILE}
-	COMPOSE_FILE_P2S=./samples/${NETWORK}/p2s/${COMPOSE_FILE}
-	COMPOSE_FILE_P2SP=./samples/${NETWORK}/p2sp/${COMPOSE_FILE}
-	# Set environment variable for docker-compose file for travis
-	ENV_P2P=./samples/${NETWORK}/p2p/${ENV}
-	ENV_P2S=./samples/${NETWORK}/p2s/${ENV}
-	ENV_P2SP=./samples/${NETWORK}/p2sp/${ENV}
-fi
 # Set image tag
 IMAGETAG=latest
 
