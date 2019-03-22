@@ -14,7 +14,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# A script to download binaries and tools, and install docker containers for the simple network scenario
+# A script to download binaries and tools, and install docker images for the simple network scenario
 
 # Match the latest image version if not specified
 export IMAGE_VERSION=0.1.0
