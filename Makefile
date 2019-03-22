@@ -55,6 +55,7 @@ ipfs:
 	go get -ldflags "$(GO_LDFLAGS)" -u $(pkgmap.$(@F))/ipfs-update
 	ipfs-update install $(IPFS_VERSION)
 	rm -f $(GOBIN)/ipfs-update
+	rm -rf $(GOPATH)/src/$(pkgmap.$(@F))/ipfs-update
 
 swarmkeygen: 
 	go get -ldflags "$(GO_LDFLAGS)" $(pkgmap.$(@F))

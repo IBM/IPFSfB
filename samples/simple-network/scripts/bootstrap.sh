@@ -21,11 +21,11 @@ export IMAGE_VERSION=0.1.0
 
 printHelper() {
     echo "Usage: "
-    echo "  bootstrap.sh [<imageversion>]"
+    echo "  bootstrap.sh [<imageversion>] [-h -d -b -t]"
     echo "Flags: "
     echo "  -h - print help message."
-    echo "  -b - bypass download of network-specific binaries."
     echo "  -d - bypass download of docker images for the specific network."
+    echo "  -b - bypass download of network-specific binaries."
     echo "  -t - bypass download of network-specific tools."
     echo
     echo "Typically, you can set the executive environment by running the script e.g.:"
@@ -86,7 +86,7 @@ binaryDownload() {
         mv samples/${NETWORK}/* $PWD
         rm -rf samples
         mkdir bin .ipfs
-        mv ${GOBIN}/swarmkeygen ${GOBIN}/ipfs $PWD/bin
+        mv ${GOBIN}/swarmkeygen $PWD/bin
     else
         echo "--------------------------------------------------------------------------------"
         echo "---- Permission denied for creating folder and downloading $NETWORK binary. ----"
@@ -109,11 +109,8 @@ binaryInstall() {
 }
 
 toolDownload() {
-    local IPFS_VERSION=$1
     if [ -n "$GOPATH" ]; then
         go get $PROJECT_PATH/cmd/swarmkeygen
-        go get -u github.com/ipfs/ipfs-update
-        ipfs-update install $IPFS_VERSION
     else
         echo "----------------------------------------------------------------------------"
         echo "----- GOPATH is not set, bypassing download of IPFSfB $NETWORK tools. ------"
@@ -126,10 +123,7 @@ toolInstall() {
     GO_CHECK=$?
     if [ "$GO_CHECK" == 0 ]; then
         echo "Downloading IPFSfB $NETWORK tools..."
-        toolDownload $IPFS_VERSION
-        echo
-        echo "Removing unnecessary build tools..."
-        rm -f ${GOBIN}/ipfs-update
+        toolDownload
     else
         echo "----------------------------------------------------------------------------"
         echo "---- Go not found, bypassing download of IPFSfB $NETWORK tools. ------------"
@@ -143,7 +137,6 @@ ORG=IBM
 PROJECT_NAME=IPFSfB
 PROJECT_PATH=github.com/${ORG}/${PROJECT_NAME}
 BRANCH=master
-IPFS_VERSION=latest
 GOBIN=${GOPATH}/bin
 
 DOCKER=true

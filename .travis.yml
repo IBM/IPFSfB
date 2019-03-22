@@ -33,33 +33,20 @@ install:
   - echo "Downloading images and tools."
   - |
     docker pull ipfsfb/ipfs-peer:$PKG_VERSION
-    git clone https://github.com/ipfs/go-ipfs.git
-    cd go-ipfs
-    make install
-    cd ..
-    rm -rf go-ipfs
     cd $GOPATH/src/github.com/$TRAVIS_REPO_OWNER/$TRAVIS_REPO_NAME
-    go get ./cmd/swarmkeygen
+    make swarmkeygen ipfs
 
-before_script:
+script:
   - echo "Initializing profile and generating swarm key."
   - |
     ipfs init --profile=default-networking
-    swarmkeygen generate > $IPFS_PATH/swarm.key
-    docker run -it --name peer0 -p 4001:4001 -p 5001:5001 -p 8080:8080 -p 8081:8081 ipfsfb/ipfs-peer
-    docker exec peer0 ipfs init --profile=default-networking
-    docker cp -a $IPFS_PATH/swarm.key peer0:/var/ipfsfb
-
-script:
-  - echo "Removing unwanted addresses and setting bootstrap nodes for daemon."
-  - |
-    TRAVIS_IPFS_ADDR=$(ipfs id -f='<addrs>' | tail -n 1)
-    docker exec peer0 ipfs bootstrap rm --all
-    docker exec peer0 ipfs bootstrap add $TRAVIS_IPFS_ADDR
-    PEER_ADDR=$(docker exec peer0 ipfs id -f='<addrs>' | tail -n 1)
     ipfs bootstrap rm --all
-    ipfs bootstrap add $PEER_ADDR
-    docker exec peer0 ipfs daemon
+    TRAVIS_IPFS_ADDR=$(ipfs id -f='<addrs>' | tail -n 1)
+    docker run -it --name peer0 -p 4001:4001 -p 5001:5001 -p 8080:8080 -p 8081:8081 ipfsfb/ipfs-peer:$PKG_VERSION \
+    /bin/bash -c "ipfs init --profile=default-networking && ipfs bootstrap rm --all && ipfs bootstrap add $TRAVIS_IPFS_ADDR \
+    ipfs daemon"
+    sudo swarmkeygen generate > $IPFS_PATH/swarm.key
+    docker cp -a $IPFS_PATH/swarm.key peer0:/var/ipfsfb
     ipfs daemon
 
 after_failure:
