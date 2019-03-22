@@ -39,6 +39,7 @@ before_script:
   - echo "Setting project environment path."
   - | 
     export IPFS_PATH=/var/ipfsfb
+    mkdir -p $IPFS_PATH
     sudo chmod a+w $IPFS_PATH
 
 script:
