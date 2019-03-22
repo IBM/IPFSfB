@@ -258,7 +258,7 @@ function p2pUp() {
 		exit 1
 	fi
 	# Run end to end tests
-	e2e/test.sh $SUBCOMMAND peer0.example.com peer1.example.com
+	$E2E_TEST $SUBCOMMAND peer0.example.com peer1.example.com
 }
 
 # Stop and clear peer to peer based private network
@@ -285,7 +285,7 @@ function p2sUp() {
 		exit 1
 	fi
 	# Run end to end tests
-	e2e/test.sh $SUBCOMMAND server.example.com peer.example.com
+	$E2E_TEST $SUBCOMMAND server.example.com peer.example.com
 }
 
 # Stop and clear peer to server based private network
@@ -314,7 +314,7 @@ function p2spUp() {
 		exit 1
 	fi
 	# Run end to end tests
-	e2e/test.sh $SUBCOMMAND server.example.com peer0.example.com peer1.example.com
+	$E2E_TEST $SUBCOMMAND server.example.com peer0.example.com peer1.example.com
 }
 
 # Stop and clear peer to server and to peer based private network
@@ -339,26 +339,31 @@ NETWORK=simple-network
 COMPOSE_FILE=docker-compose.yml
 # Environment file
 ENV=.env
-# Differentiate directory for travis and user
+# Set end-to-end name space
+E2E_NS=e2e
+# End-to-end test file
+E2E_TEST=$E2E_NS/test.sh
+# Set networks docker-compose file
+COMPOSE_FILE_P2P=./p2p/${COMPOSE_FILE}
+COMPOSE_FILE_P2S=./p2s/${COMPOSE_FILE}
+COMPOSE_FILE_P2SP=./p2sp/${COMPOSE_FILE}
+# Set environment variable for docker-compose file
+ENV_P2P=./p2p/${ENV}
+ENV_P2S=./p2s/${ENV}
+ENV_P2SP=./p2sp/${ENV}
+# Set config path for travis
 DIR=$(basename $PWD)
-if [ "$DIR" == "$NETWORK" ]; then
-	# Set networks docker-compose file for user
-	COMPOSE_FILE_P2P=./p2p/${COMPOSE_FILE}
-	COMPOSE_FILE_P2S=./p2s/${COMPOSE_FILE}
-	COMPOSE_FILE_P2SP=./p2sp/${COMPOSE_FILE}
-	# Set environment variable for docker-compose file for user
-	ENV_P2P=./p2p/${ENV}
-	ENV_P2S=./p2s/${ENV}
-	ENV_P2SP=./p2sp/${ENV}
+if [ "$DIR" != "$NETWORK" ]; then
 else
 	# Set networks docker-compose file for travis
-	COMPOSE_FILE_P2P=./samples/$NETWORK/p2p/${COMPOSE_FILE}
-	COMPOSE_FILE_P2S=./samples/$NETWORK/p2s/${COMPOSE_FILE}
-	COMPOSE_FILE_P2SP=./samples/$NETWORK/p2sp/${COMPOSE_FILE}
-	# Set environment variable for docker-compose file travis
-	ENV_P2P=./samples/$NETWORK/p2p/${ENV}
-	ENV_P2S=./samples/$NETWORK/p2s/${ENV}
-	ENV_P2SP=./samples/$NETWORK/p2sp/${ENV}
+	COMPOSE_FILE_P2P=./samples/${NETWORK}/p2p/${COMPOSE_FILE}
+	COMPOSE_FILE_P2S=./samples/${NETWORK}/p2s/${COMPOSE_FILE}
+	COMPOSE_FILE_P2SP=./samples/${NETWORK}/p2sp/${COMPOSE_FILE}
+	# Set environment variable for docker-compose file for travis
+	ENV_P2P=./samples/${NETWORK}/p2p/${ENV}
+	ENV_P2S=./samples/${NETWORK}/p2s/${ENV}
+	ENV_P2SP=./samples/${NETWORK}/p2sp/${ENV}
+	E2E_TEST=./samples/${NETWORK}/${E2E_TEST}
 fi
 # Set image tag
 IMAGETAG=latest
