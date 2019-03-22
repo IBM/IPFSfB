@@ -31,15 +31,16 @@ before_install:
 install:
   - echo "Downloading images and tools."
   - |
-    docker pull ipfsfb/ipfs-peer:$PKG_VERSION
-    docker pull ipfsfb/ipfs-server:$PKG_VERSION
-    docker pull ipfsfb/ipfs-tools:$PKG_VERSION
     cd $GOPATH/src/github.com/$TRAVIS_REPO_OWNER/$TRAVIS_REPO_NAME
-    make swarmkeygen ipfs
+    make ipfs swarmkeygen
+    echo $(which swarmkeygen)
+    chmod +x samples/simple-network/scrips/bootstrap.sh
+    cd samples/simple-network/scrips
+    sudo ./bootstrap.sh $PKG_VERSION -b -t
 
 before_script:
   - echo "Setting project environment path."
-  - | 
+  - |
     export IPFS_PATH=/var/ipfsfb
     sudo mkdir -p $IPFS_PATH
     sudo chmod a+w $IPFS_PATH
@@ -49,6 +50,7 @@ script:
   - |
     chmod +x samples/simple-network/pnet.sh
     cd samples/simple-network
+    echo $(which swarmkeygen)
     sudo ./pnet.sh up p2p
     sudo ./pnet.sh up p2s
     sudo ./pnet.sh up p2sp
