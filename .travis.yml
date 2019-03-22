@@ -32,6 +32,8 @@ install:
   - echo "Downloading images and tools."
   - |
     docker pull ipfsfb/ipfs-peer:$PKG_VERSION
+    docker pull ipfsfb/ipfs-server:$PKG_VERSION
+    docker pull ipfsfb/ipfs-tools:$PKG_VERSION
     cd $GOPATH/src/github.com/$TRAVIS_REPO_OWNER/$TRAVIS_REPO_NAME
     make swarmkeygen ipfs
 
@@ -39,22 +41,17 @@ before_script:
   - echo "Setting project environment path."
   - | 
     export IPFS_PATH=/var/ipfsfb
-    mkdir -p $IPFS_PATH
+    sudo mkdir -p $IPFS_PATH
     sudo chmod a+w $IPFS_PATH
 
 script:
-  - echo "Initializing profile and generating swarm key."
+  - echo "Running scripts to test the simple network scenarios."
   - |
-    ipfs init --profile=default-networking
-    ipfs bootstrap rm --all
-    TRAVIS_IPFS_ADDR=$(ipfs id -f='<addrs>' | tail -n 1)
-    docker run -it --name peer0 -p 4001:4001 -p 5001:5001 -p 8080:8080 -p 8081:8081 ipfsfb/ipfs-peer:$PKG_VERSION \
-    /bin/bash -c "ipfs init --profile=default-networking && ipfs bootstrap rm --all && ipfs bootstrap add $TRAVIS_IPFS_ADDR"
-    swarmkeygen generate > $IPFS_PATH/swarm.key
-    docker cp -a $IPFS_PATH/swarm.key peer0:/var/ipfsfb
-
-after_failure:
-  - docker logs peer0
+    chmod +x samples/simple-network/pnet.sh
+    cd samples/simple-network
+    sudo ./pnet.sh up p2p
+    sudo ./pnet.sh up p2s
+    sudo ./pnet.sh up p2sp
 
 notifications:
   email: false
