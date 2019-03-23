@@ -133,7 +133,7 @@ done
 if [ "$COMMAND" == "init" ]; then
 	MESSAGE="Initializing"
 elif [ "$COMMAND" == "daemon" ]; then
-	MESSAGE="Starting"
+	MESSAGE="Running"
 else
 	printHelper
 	exit 1

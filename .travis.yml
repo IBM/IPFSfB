@@ -39,20 +39,29 @@ install:
 before_script:
   - echo "Setting project environment path."
   - |
-    export COMPOSE_FILE_P2P=$PWD/samples/simple-network/
     export IPFS_PATH=/var/ipfsfb
     sudo mkdir -p $IPFS_PATH
     sudo chmod a+w $IPFS_PATH
 
 script:
-  - echo "Test functions for each command line tools."
+  - echo "Testing function for each command line tools."
   - |
+    docker run -it --name peer0 -p 4001:4001 -p 5001:5001 -p 8080:8080 -p 8081:8081 ipfsfb/ipfs-peer:$PKG_VERSION \
+    /bin/bash -c "ipfs init --profile=default-networking && ipfs bootstrap rm --all && ipfs id -f='<addrs>'" >& peer0.log
+    docker run -it --name server0 -p 4001:4001 -p 5001:5001 -p 8080:8080 -p 8081:8081 ipfsfb/ipfs-server:$PKG_VERSION \
+    /bin/bash -c "ipfs init --profile=server && ipfs bootstrap rm --all && ipfs id -f='<addrs>'" >& server0.log
     ipfs init --profile=default-networking
     ipfs bootstrap rm --all
-    TRAVIS_IPFS_ADDR=$(ipfs id -f='<addrs>' | tail -n 1)
+    TRAVIS_IPFS_ADDR=$(ipfs id -f='<addrs>')
     echo $TRAVIS_IPFS_ADDR
     swarmkeygen generate > $IPFS_PATH/swarm.key
     cat $IPFS_PATH/swarm.key
+
+after_failure:
+  - echo "Viewing behave container log files."
+  - |
+    cat peer0.log
+    cat server0.log
 
 notifications:
   email: false
