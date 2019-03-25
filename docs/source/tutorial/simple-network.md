@@ -17,7 +17,7 @@ After installed, you can enter to the network directory and just run:
 ```
 
 The network tag is one of [p2p](https://en.wikipedia.org/wiki/Peer-to-peer), [p2s](https://zh.wikipedia.org/wiki/P2S), and [p2sp](https://zh.wikipedia.org/wiki/P2SP).
-This command will up and start the corresponding network.
+This command will up and start a corresponding network.
 During the network booting, swarmkeygen tool will generate a random, 32 bytes secret key in your network's `build` directory, and `docker cp` will copy it to each containers. At the same time, each network nodes will exchange their ipfs address with others. Finally, rebooting the network using the secret key (`swarm.key` file) will create a private network.
 
 ## Setting up private network manually
@@ -30,7 +30,7 @@ Enter to the network directory, and add the bin path to your PATH:
 export PATH=$PWD/bin:$PATH
 ```
 
-Choose which network to start:
+Next, choose which network to start:
 
 1. [P2P](#1-p2p)
 2. [P2S](#2-p2s)
