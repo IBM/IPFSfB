@@ -42,10 +42,12 @@ make all
 4. [Troubleshooting](#4-troubleshooting)
 5. [Considerations](#5-considerations)
 6. [Architecture](#6-architecture)
+7. [Related links](#7-related-links)
+8. [License](#8-license)
 
 ## 1. Running a private network
 
-Currently, we are offering simple network as one of the samples. It contains three senarios including peer-to-peer, peer-to-server, and peer to peer and to server. You can follow the [tutorial](https://github.com/IBM/IPFSfB/blob/master/docs/source/tutorial/simple-network.md) to envision and run a private network.
+Currently, we are offering simple network as one of the samples. It contains three senarios including peer-to-peer, peer-to-server, and peer to peer and to server. You can follow the [tutorial](https://github.com/IBM/IPFSfB/blob/master/docs/tutorial/simple-network.md) to envision and run a private network.
 
 ## 2. Runtime instructions
 
@@ -55,7 +57,7 @@ If you are running a private network, [config.sh](https://github.com/IBM/IPFSfB/
 
 One of the samples, simple network is avaliable in three scenarios ([p2p](https://en.wikipedia.org/wiki/Peer-to-peer), [p2s](https://zh.wikipedia.org/wiki/P2S), and [p2sp](https://zh.wikipedia.org/wiki/P2SP)).
 
-The scenario guidelines are available at [docs/source/tutorial/simple-network.md](https://github.com/IBM/IPFSfB/blob/master/docs/source/tutorial/simple-network.md).
+The scenario guidelines are available at [docs/tutorial/simple-network.md](https://github.com/IBM/IPFSfB/blob/master/docs/tutorial/simple-network.md).
 
 ### Accessing and running
 
@@ -67,7 +69,7 @@ Each scenarios have end-to-end testing, located in [samples/simple-network/e2e](
 
 ## 4. Troubleshooting
 
-If you encountered a problem for running IPFSfB, raise an issue and mention one of the maintainers in the [maintainers board](https://github.com/IBM/IPFSfB/blob/master/MAINTAINERS.md#maintainers-board).
+If you have encountered a problem for running IPFSfB, raise an issue and mention one of the maintainers in the [maintainers board](https://github.com/IBM/IPFSfB/blob/master/MAINTAINERS.md#maintainers-board).
 
 ## 5. Considerations
 
@@ -87,5 +89,15 @@ IPFSfB production will not only include simple network scenarios for private net
 
 ## 6. Architecture
 
-We have made a document references for the architecture part.
-You can refer to [arch.md](https://github.com/IBM/IPFSfB/tree/master/docs/source/arch/arch.md) document for the architecture of each scenarios.
+We have made a document references for the architecture diagrams.
+You can refer to the [architecture](https://github.com/IBM/IPFSfB/tree/master/docs/arch/architecture-references.md) document for the architecture of each scenarios.
+
+## 7. Related links
+
+- [go-ipfs](https://github.com/ipfs/go-ipfs/): this repository is based on InterPlanetary File System implementation in Go.
+
+## 8. License
+
+This code pattern is licensed under the Apache Software License, Version 2. Separate third-party code objects invoked within this code pattern are licensed by their respective providers pursuant to their own separate licenses. Contributions are subject to the [Developer Certificate of Origin, Version 1.1 (DCO)](https://developercertificate.org/) and the [Apache Software License, Version 2](https://www.apache.org/licenses/LICENSE-2.0.txt).
+
+[Apache Software License (ASL) FAQ](https://www.apache.org/foundation/license-faq.html#WhatDoesItMEAN)

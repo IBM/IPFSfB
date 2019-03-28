@@ -1,5 +1,7 @@
 # Performance Guide
 
+There is a performance guide for IPFSfB.
+
 ## Application Performance
 
-### Scaling
+Refer to [Performance and production](https://github.com/IBM/IPFSfB#performance-and-production) section.

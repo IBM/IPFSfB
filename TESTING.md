@@ -1,7 +1,9 @@
 # Testers Guide
 
-## Unit Testing
+There is a guidance for IPFSfB testers.
 
-## Functional Testing
+Currently we are offering end-to-end testing for simple network scenarios (p2p, p2s, and p2sp).
 
-## E2E Testing
+## E2E testing
+
+Refer to [test.sh](https://github.com/IBM/IPFSfB/blob/master/samples/simple-network/e2e/test.sh).

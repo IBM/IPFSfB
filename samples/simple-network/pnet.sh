@@ -61,7 +61,7 @@ function generateKey() {
 	fi
 	echo "---- Generate swarm.key file using swarmkeygen tool. ----"
 	set -x
-	swarmkeygen generate > $BUILD_PATH/swarm.key
+	swarmkeygen generate >$BUILD_PATH/swarm.key
 	res=$?
 	set +x
 	if [ $res -ne 0 ]; then

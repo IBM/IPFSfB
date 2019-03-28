@@ -6,6 +6,10 @@ We use the GitHub issue tracker to discuss new features and non-trivial bugs.
 
 When contributing to this repository, please first discuss the change you wish to make via issue, email, or any other method with the [MAINTAINERS](MAINTAINERS.md#maintainers-board) of this repository before making a change.
 
+## Contributors Board
+
+* Hengming (5sWind) Zhang - hengmzh@cn.ibm.com
+
 ## Pull Requests 
 
 To contribute code, documentation, or tests, please submit a pull request to
@@ -19,8 +23,6 @@ submitting your pull request.
 
 ## Documentation
 
+Refer to [docs](https://github.com/IBM/IPFSfB/tree/master/docs).
+
 ## Community
-
-## Contributors Board
-
-* Hengming (5sWind) Zhang - hengmzh@cn.ibm.com

@@ -33,128 +33,128 @@ VALIDED_TIME=8760h
 
 # Verify execution result
 verifyResult() {
-    if [ $1 -ne 0 ]; then
-        echo "==== $2 ===="
-        echo
-        echo "==== Failed to excute end-to-end test, exit. ===="
-        echo
-        exit 1
-    fi 
+	if [ $1 -ne 0 ]; then
+		echo "==== $2 ===="
+		echo
+		echo "==== Failed to excute end-to-end test, exit. ===="
+		echo
+		exit 1
+	fi
 }
 
 # Set enviroment path
 setGlobals() {
-    NETWORK=$1
-    if [ "$NETWORK" == "p2p" ]; then
-        PEER_SRC_PATH=/opt/go/src/github.com/ipfsfb/p2p/peer/artifacts
-    elif [ "$NETWORK" == "p2s" ]; then
-        PEER_SRC_PATH=/opt/go/src/github.com/ipfsfb/p2s/peer/artifacts
-        SERVER_SRC_PATH=/opt/go/src/github.com/ipfsfb/p2s/server/artifacts
-    else
-        PEER_SRC_PATH=/opt/go/src/github.com/ipfsfb/p2sp/peer/artifacts
-        SERVER_SRC_PATH=/opt/go/src/github.com/ipfsfb/p2sp/server/artifacts
-    fi
+	NETWORK=$1
+	if [ "$NETWORK" == "p2p" ]; then
+		PEER_SRC_PATH=/opt/go/src/github.com/ipfsfb/p2p/peer/artifacts
+	elif [ "$NETWORK" == "p2s" ]; then
+		PEER_SRC_PATH=/opt/go/src/github.com/ipfsfb/p2s/peer/artifacts
+		SERVER_SRC_PATH=/opt/go/src/github.com/ipfsfb/p2s/server/artifacts
+	else
+		PEER_SRC_PATH=/opt/go/src/github.com/ipfsfb/p2sp/peer/artifacts
+		SERVER_SRC_PATH=/opt/go/src/github.com/ipfsfb/p2sp/server/artifacts
+	fi
 }
 
 # Upload files to IPFS
 uploadFiles() {
-    setGlobals $NETWORK
-    set -x
-    if [ "$NETWORK" == "p2p" ]; then
-        ipfs add -q ${PEER_SRC_PATH}/${FILE_NAME} >&$LOG_PATH/log.txt
-    else
-        ipfs add -q ${SERVER_SRC_PATH}/${FILE_NAME} >&$LOG_PATH/log.txt
-    fi
-    res=$?
-    set +x
-    cat $LOG_PATH/log.txt
-    verifyResult $res "Error!!! Unable to upload files to IPFS on ${IPFS_HOST}."
-    echo "==== Successfully uploaded file ${FILE_NAME} to IPFS on ${IPFS_HOST} on the private network '$NETWORK'. ===="
-    echo
+	setGlobals $NETWORK
+	set -x
+	if [ "$NETWORK" == "p2p" ]; then
+		ipfs add -q ${PEER_SRC_PATH}/${FILE_NAME} >&$LOG_PATH/log.txt
+	else
+		ipfs add -q ${SERVER_SRC_PATH}/${FILE_NAME} >&$LOG_PATH/log.txt
+	fi
+	res=$?
+	set +x
+	cat $LOG_PATH/log.txt
+	verifyResult $res "Error!!! Unable to upload files to IPFS on ${IPFS_HOST}."
+	echo "==== Successfully uploaded file ${FILE_NAME} to IPFS on ${IPFS_HOST} on the private network '$NETWORK'. ===="
+	echo
 }
 
 # View files from IPFS
 viewFiles() {
-    HASH=$(cat $LOG_PATH/log.txt | head -n 1)
-    set -x
-    ipfs cat $HASH >>$LOG_PATH/log.txt
-    res=$?
-    set +x
-    cat $LOG_PATH/log.txt
-    verifyResult $res "Error!!! Unable to view files from IPFS on ${IPFS_HOST}."
-    echo "==== Successfully viewed a file $HASH from IPFS on ${IPFS_HOST} on the private network '$NETWORK'. ===="
-    echo
+	HASH=$(cat $LOG_PATH/log.txt | head -n 1)
+	set -x
+	ipfs cat $HASH >>$LOG_PATH/log.txt
+	res=$?
+	set +x
+	cat $LOG_PATH/log.txt
+	verifyResult $res "Error!!! Unable to view files from IPFS on ${IPFS_HOST}."
+	echo "==== Successfully viewed a file $HASH from IPFS on ${IPFS_HOST} on the private network '$NETWORK'. ===="
+	echo
 }
 
 # Download files from IPFS
 downloadFiles() {
-    HASH=$(cat $LOG_PATH/log.txt | head -n 1)
-    set -x
-    ipfs get $HASH -o ${PEER_CONFIG_PATH}/${FILE_NAME} >>$LOG_PATH/log.txt
-    res=$?
-    set +x
-    cat $LOG_PATH/log.txt
-    verifyResult $res "Error!!! Unable to download files from IPFS on ${IPFS_HOST}."
-    echo "==== Successfully downloaded a file ${FILE_NAME} from IPFS on ${IPFS_HOST} on the private network '$NETWORK'. ===="
-    echo
+	HASH=$(cat $LOG_PATH/log.txt | head -n 1)
+	set -x
+	ipfs get $HASH -o ${PEER_CONFIG_PATH}/${FILE_NAME} >>$LOG_PATH/log.txt
+	res=$?
+	set +x
+	cat $LOG_PATH/log.txt
+	verifyResult $res "Error!!! Unable to download files from IPFS on ${IPFS_HOST}."
+	echo "==== Successfully downloaded a file ${FILE_NAME} from IPFS on ${IPFS_HOST} on the private network '$NETWORK'. ===="
+	echo
 }
 
 # Publish web to IPFS
 publishWeb() {
-    setGlobals $NETWORK
-    set -x
-    if [ "$NETWORK" == "p2p" ]; then
-        ipfs add -wq ${PEER_SRC_PATH}/${WEB_NAME} >&$LOG_PATH/log.txt
-    else
-        ipfs add -wq ${SERVER_SRC_PATH}/${WEB_NAME} >&$LOG_PATH/log.txt
-    fi
-    res=$?
-    set +x
-    cat $LOG_PATH/log.txt
-    verifyResult $res "Error!!! Unable to publish websites to IPFS on ${IPFS_HOST}."
-    echo "==== Successfully published a web ${WEB_NAME} to IPFS on ${IPFS_HOST} on the private network '$NETWORK'. ===="
-    echo
-    if [ "$NETWORK" != "p2p" ]; then
-        IPFS_HASH=$(cat $LOG_PATH/log.txt | tail -n 1)
-        set -x
-        ipfs name publish -t $VALIDED_TIME -Q $IPFS_HASH >>$LOG_PATH/log.txt
-        IPNS_HASH=$(cat $LOG_PATH/log.txt | tail -n 1)
-        ipfs name resolve $IPNS_HASH >>log.txt
-        res=$?
-        set +x
-        cat $LOG_PATH/log.txt
-        verifyResult $res "Error!!! Unable to publish websites to IPNS on ${IPFS_HOST}."
-        echo "==== Successfully published a web ${WEB_NAME} to IPNS on ${IPFS_HOST} on the private network '$NETWORK'. ===="
-        echo
-    fi
+	setGlobals $NETWORK
+	set -x
+	if [ "$NETWORK" == "p2p" ]; then
+		ipfs add -wq ${PEER_SRC_PATH}/${WEB_NAME} >&$LOG_PATH/log.txt
+	else
+		ipfs add -wq ${SERVER_SRC_PATH}/${WEB_NAME} >&$LOG_PATH/log.txt
+	fi
+	res=$?
+	set +x
+	cat $LOG_PATH/log.txt
+	verifyResult $res "Error!!! Unable to publish websites to IPFS on ${IPFS_HOST}."
+	echo "==== Successfully published a web ${WEB_NAME} to IPFS on ${IPFS_HOST} on the private network '$NETWORK'. ===="
+	echo
+	if [ "$NETWORK" != "p2p" ]; then
+		IPFS_HASH=$(cat $LOG_PATH/log.txt | tail -n 1)
+		set -x
+		ipfs name publish -t $VALIDED_TIME -Q $IPFS_HASH >>$LOG_PATH/log.txt
+		IPNS_HASH=$(cat $LOG_PATH/log.txt | tail -n 1)
+		ipfs name resolve $IPNS_HASH >>log.txt
+		res=$?
+		set +x
+		cat $LOG_PATH/log.txt
+		verifyResult $res "Error!!! Unable to publish websites to IPNS on ${IPFS_HOST}."
+		echo "==== Successfully published a web ${WEB_NAME} to IPNS on ${IPFS_HOST} on the private network '$NETWORK'. ===="
+		echo
+	fi
 }
 
 # Query web content from IPFS
 queryWeb() {
-    if [ "$NETWORK" != "p2p" ]; then
-        IPFS_HASH=$(cat $LOG_PATH/log.txt | sed -n 2p)
-    else
-        IPFS_HASH=$(cat $LOG_PATH/log.txt | tail -n 1)
-    fi
-    set -x
-    pup -f <(ipfs cat $IPFS_HASH/${WEB_NAME}) pre text{} >>$LOG_PATH/log.txt
-    res=$?
-    set +x
-    cat $LOG_PATH/log.txt
-    verifyResult $res "Error!!! Unable to query website contents from IPFS on ${IPFS_HOST}."
-    echo "==== Successfully queried a web content $IPFS_HASH/${WEB_NAME} from IPFS on ${IPFS_HOST} on the private network '$NETWORK'. ===="
-    echo
-    if [ "$NETWORK" != "p2p" ]; then
-        IPNS_HASH=$(cat $LOG_PATH/log.txt | sed -n 3p)
-        set -x
-        pup -f <(ipfs cat $IPNS_PREFIX/$IPNS_HASH/${WEB_NAME}) pre text{} >>$LOG_PATH/log.txt
-        res=$?
-        set +x
-        cat $LOG_PATH/log.txt
-        verifyResult $res "Error!!! Unable to query website contents from IPNS on ${IPFS_HOST}."
-        echo "==== Successfully queried a web content $IPNS_PREFIX/$IPNS_HASH/${WEB_NAME} from IPNS on ${IPFS_HOST} on the private network '$NETWORK'. ===="
-        echo
-    fi
+	if [ "$NETWORK" != "p2p" ]; then
+		IPFS_HASH=$(cat $LOG_PATH/log.txt | sed -n 2p)
+	else
+		IPFS_HASH=$(cat $LOG_PATH/log.txt | tail -n 1)
+	fi
+	set -x
+	pup -f <(ipfs cat $IPFS_HASH/${WEB_NAME}) pre text{} >>$LOG_PATH/log.txt
+	res=$?
+	set +x
+	cat $LOG_PATH/log.txt
+	verifyResult $res "Error!!! Unable to query website contents from IPFS on ${IPFS_HOST}."
+	echo "==== Successfully queried a web content $IPFS_HASH/${WEB_NAME} from IPFS on ${IPFS_HOST} on the private network '$NETWORK'. ===="
+	echo
+	if [ "$NETWORK" != "p2p" ]; then
+		IPNS_HASH=$(cat $LOG_PATH/log.txt | sed -n 3p)
+		set -x
+		pup -f <(ipfs cat $IPNS_PREFIX/$IPNS_HASH/${WEB_NAME}) pre text{} >>$LOG_PATH/log.txt
+		res=$?
+		set +x
+		cat $LOG_PATH/log.txt
+		verifyResult $res "Error!!! Unable to query website contents from IPNS on ${IPFS_HOST}."
+		echo "==== Successfully queried a web content $IPNS_PREFIX/$IPNS_HASH/${WEB_NAME} from IPNS on ${IPFS_HOST} on the private network '$NETWORK'. ===="
+		echo
+	fi
 }
 
 # The arg of the command
@@ -168,11 +168,11 @@ if [ "${COMMAND}" == "uploadFiles" ]; then
 elif [ "${COMMAND}" == "viewFiles" ]; then
 	viewFiles
 elif [ "${COMMAND}" == "downloadFiles" ]; then
-    downloadFiles
+	downloadFiles
 elif [ "${COMMAND}" == "publishWeb" ]; then
-    publishWeb
+	publishWeb
 elif [ "${COMMAND}" == "queryWeb" ]; then
-    queryWeb
+	queryWeb
 else
 	exit 1
 fi
