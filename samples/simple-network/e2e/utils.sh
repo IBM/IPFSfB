@@ -46,13 +46,13 @@ verifyResult() {
 setGlobals() {
 	NETWORK=$1
 	if [ "$NETWORK" == "p2p" ]; then
-		PEER_SRC_PATH=/opt/go/src/github.com/ipfsfb/p2p/peer/artifacts
+		PEER_SRC_PATH=/opt/gopath/src/github.com/IBM/IPFSfB/p2p/peer/artifacts
 	elif [ "$NETWORK" == "p2s" ]; then
-		PEER_SRC_PATH=/opt/go/src/github.com/ipfsfb/p2s/peer/artifacts
-		SERVER_SRC_PATH=/opt/go/src/github.com/ipfsfb/p2s/server/artifacts
+		PEER_SRC_PATH=/opt/gopath/src/github.com/IBM/IPFSfB/p2s/peer/artifacts
+		SERVER_SRC_PATH=/opt/gopath/src/github.com/IBM/IPFSfB/p2s/server/artifacts
 	else
-		PEER_SRC_PATH=/opt/go/src/github.com/ipfsfb/p2sp/peer/artifacts
-		SERVER_SRC_PATH=/opt/go/src/github.com/ipfsfb/p2sp/server/artifacts
+		PEER_SRC_PATH=/opt/gopath/src/github.com/IBM/IPFSfB/p2sp/peer/artifacts
+		SERVER_SRC_PATH=/opt/gopath/src/github.com/IBM/IPFSfB/p2sp/server/artifacts
 	fi
 }
 

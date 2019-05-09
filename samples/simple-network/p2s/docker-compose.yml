@@ -45,7 +45,7 @@ services:
     extends:
       file: ../common/docker-compose-cli.yaml
       service: cli
-    working_dir: /opt/go/src/github.com/ipfsfb/p2s/cli
+    working_dir: /opt/gopath/src/github.com/IBM/IPFSfB/p2s/cli
     depends_on:
       - peer.example.com
       - server.example.com

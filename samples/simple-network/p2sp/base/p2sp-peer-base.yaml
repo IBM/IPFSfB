@@ -21,11 +21,11 @@ services:
       - CORE_VM_ENDPOINT=unix:///host/var/run/docker.sock
       - CORE_VM_DOCKER_HOSTCONFIG_NETWORKMODE=${COMPOSE_PROJECT_NAME}_p2sp
       - IPFS_LOGGING=INFO
-    working_dir: /opt/go/src/github.com/ipfsfb/p2sp/peer
+    working_dir: /opt/gopath/src/github.com/IBM/IPFSfB/p2sp/peer
     volumes:
-      - ../../config.sh:/opt/go/src/github.com/ipfsfb/p2sp/peer/config.sh
-      - ../../artifacts:/opt/go/src/github.com/ipfsfb/p2sp/peer/artifacts
-      - ../../e2e:/opt/go/src/github.com/ipfsfb/p2sp/peer/e2e
+      - ../../config.sh:/opt/gopath/src/github.com/IBM/IPFSfB/p2sp/peer/config.sh
+      - ../../artifacts:/opt/gopath/src/github.com/IBM/IPFSfB/p2sp/peer/artifacts
+      - ../../e2e:/opt/gopath/src/github.com/IBM/IPFSfB/p2sp/peer/e2e
       - ../../.ipfs/staging:/var/ipfsfb/staging
       - ../../.ipfs/data:/var/ipfsfb/data
     command: bash -c "./config.sh init && ./config.sh daemon"

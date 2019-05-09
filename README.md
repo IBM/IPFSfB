@@ -8,6 +8,22 @@ This repository contains instructions to build a private, unstructured data stor
 
 InterPlanetary File System for Business (IPFSfB) is based on InterPlanetary File System, which aim to provide an enterprise form, unstructured data storage network for any blockchain.
 
+## Flow
+
+Currently we have two flows for each contributors and users.
+
+### Flow 1: for contributors
+
+![IPFSfB Contributor Flow](docs/flow/flow-v1-contributor.png)
+
+The contributor flow tells you how to contribute to IPFSfB. You can also refer to the [contributors guide](CONTRIBUTING.md).
+
+### Flow 2: for users
+
+![IPFSfB User Flow](docs/flow/flow-v3-user.png)
+
+The user flow corresponds how to set up a private network, which you can refer to [running a private network](#1-running-a-private-network).
+
 ## Prerequisites
 
 - [Docker](https://www.docker.com/)
@@ -39,39 +55,35 @@ make all
 1. [Running a private network](#1-running-a-private-network)
 2. [Runtime instructions](#2-runtime-instructions)
 3. [Scenarios](#3-scenarios)
-4. [Troubleshooting](#4-troubleshooting)
-5. [Considerations](#5-considerations)
-6. [Architecture](#6-architecture)
+4. [Considerations](#4-considerations)
+5. [Architecture](#5-architecture)
+6. [Troubleshooting](#6-troubleshooting)
 7. [Related links](#7-related-links)
 8. [License](#8-license)
 
 ## 1. Running a private network
 
-Currently, we are offering simple network as one of the samples. It contains three senarios including peer-to-peer, peer-to-server, and peer to peer and to server. You can follow the [tutorial](https://github.com/IBM/IPFSfB/blob/master/docs/tutorial/simple-network.md) to envision and run a private network.
+Currently, we are offering simple network as one of the samples. It contains three senarios including peer-to-peer, peer-to-server, and peer to peer and to server. You can follow the [tutorial](docs/tutorial/simple-network.md) to envision and run a private network.
 
 ## 2. Runtime instructions
 
-If you are running a private network, [config.sh](https://github.com/IBM/IPFSfB/blob/master/samples/simple-network/config.sh) file will help containers to check runtime health. Regularly inspect docker containers log in the runtime environment may be helpful.
+If you are running a private network, [config.sh](samples/simple-network/config.sh) file will help containers to check runtime health. Regularly inspect docker containers log in the runtime environment may be helpful.
 
 ## 3. Scenarios
 
 One of the samples, simple network is avaliable in three scenarios ([p2p](https://en.wikipedia.org/wiki/Peer-to-peer), [p2s](https://zh.wikipedia.org/wiki/P2S), and [p2sp](https://zh.wikipedia.org/wiki/P2SP)).
 
-The scenario guidelines are available at [docs/tutorial/simple-network.md](https://github.com/IBM/IPFSfB/blob/master/docs/tutorial/simple-network.md).
+The scenario guidelines are available at [docs/tutorial/simple-network.md](docs/tutorial/simple-network.md).
 
 ### Accessing and running
 
-You can access and download network specific binaries and images through [bootstrap.sh](https://github.com/IBM/IPFSfB/blob/master/samples/simple-network/scripts/bootstrap.sh). Once downloaded, you can run these network scenarios by [pnet.sh](https://github.com/IBM/IPFSfB/blob/master/samples/simple-network/pnet.sh).
+You can access and download network specific binaries and images through [bootstrap.sh](samples/simple-network/scripts/bootstrap.sh). Once downloaded, you can run these network scenarios by [pnet.sh](samples/simple-network/pnet.sh).
 
 ### End-to-end testing
 
-Each scenarios have end-to-end testing, located in [samples/simple-network/e2e](https://github.com/IBM/IPFSfB/tree/master/samples/simple-network/e2e).
+Each scenarios have end-to-end testing, located in [samples/simple-network/e2e](samples/simple-network/e2e).
 
-## 4. Troubleshooting
-
-If you have encountered a problem for running IPFSfB, raise an issue and mention one of the maintainers in the [maintainers board](https://github.com/IBM/IPFSfB/blob/master/MAINTAINERS.md#maintainers-board).
-
-## 5. Considerations
+## 4. Considerations
 
 There are several considerations for the roadmap of IPFSfB.
 
@@ -87,14 +99,19 @@ IPFSfB production will not only include simple network scenarios for private net
 - VS Code extension
 - Hyperledger Fabric extension
 
-## 6. Architecture
+## 5. Architecture
 
 We have made a document references for the architecture diagrams.
-You can refer to the [architecture](https://github.com/IBM/IPFSfB/tree/master/docs/arch/architecture-references.md) document for the architecture of each scenarios.
+You can refer to the [architecture](docs/arch/architecture-references.md) document for the architecture of each scenarios.
+
+## 6. Troubleshooting
+
+If you have encountered a problem for running IPFSfB, raise an issue and mention one of the maintainers in the [maintainers board](MAINTAINERS.md#maintainers-board).
 
 ## 7. Related links
 
-- [go-ipfs](https://github.com/ipfs/go-ipfs/): this repository is based on InterPlanetary File System implementation in Go.
+- [go-ipfs](https://github.com/ipfs/go-ipfs): this repository is based on InterPlanetary File System implementation in Go.
+- [Hyperledger Fabric - Building Your First Network](https://hyperledger-fabric.readthedocs.io/en/master/build_network.html): the technical design of each scenarios of simple network are referenced to build your first network (BYFN) sample.
 
 ## 8. License
 

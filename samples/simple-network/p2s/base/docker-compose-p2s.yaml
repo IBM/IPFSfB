@@ -29,13 +29,13 @@ services:
       - 5001:5001
       - 8080:8080
       - 8081:8081
-    working_dir: /opt/go/src/github.com/ipfsfb/p2s/peer
+    working_dir: /opt/gopath/src/github.com/IBM/IPFSfB/p2s/peer
     volumes:
       - /var/run/:/host/var/run/
       - peer.example.com:/var/ipfsfb/peer
-      - ../../config.sh:/opt/go/src/github.com/ipfsfb/p2s/peer/config.sh
-      - ../../artifacts:/opt/go/src/github.com/ipfsfb/p2s/peer/artifacts
-      - ../../e2e:/opt/go/src/github.com/ipfsfb/p2s/peer/e2e
+      - ../../config.sh:/opt/gopath/src/github.com/IBM/IPFSfB/p2s/peer/config.sh
+      - ../../artifacts:/opt/gopath/src/github.com/IBM/IPFSfB/p2s/peer/artifacts
+      - ../../e2e:/opt/gopath/src/github.com/IBM/IPFSfB/p2s/peer/e2e
     command: bash -c "./config.sh init && ./config.sh daemon"
 
   server.example.com:
@@ -53,11 +53,11 @@ services:
       - 7001:7001
       - 9080:9080
       - 9081:9081
-    working_dir: /opt/go/src/github.com/ipfsfb/p2s/server
+    working_dir: /opt/gopath/src/github.com/IBM/IPFSfB/p2s/server
     volumes:
       - /var/run/:/host/var/run/
       - server.example.com:/var/ipfsfb/server
-      - ../../config.sh:/opt/go/src/github.com/ipfsfb/p2s/server/config.sh
-      - ../../artifacts:/opt/go/src/github.com/ipfsfb/p2s/server/artifacts
-      - ../../e2e:/opt/go/src/github.com/ipfsfb/p2s/server/e2e
+      - ../../config.sh:/opt/gopath/src/github.com/IBM/IPFSfB/p2s/server/config.sh
+      - ../../artifacts:/opt/gopath/src/github.com/IBM/IPFSfB/p2s/server/artifacts
+      - ../../e2e:/opt/gopath/src/github.com/IBM/IPFSfB/p2s/server/e2e
     command: bash -c "./config.sh init -p server && ./config.sh daemon -m"

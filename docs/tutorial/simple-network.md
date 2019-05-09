@@ -4,7 +4,7 @@ This is a tutorial for IPFSfB simple network. Simple network is based on InterPl
 
 ## Quickstart
 
-The [bootstrap.sh](https://github.com/IBM/IPFSfB/blob/master/samples/simple-network/scripts/bootstrap.sh) script will download binaries, tools and docker images for the simple (private) network. In the process, docker will download the images and tag them to latest. Tools will be installed in your network's bin directory. Optinally, you can specify the version tag for IPFSfB images. By default, version is 0.1.0.
+The [bootstrap.sh](../../samples/simple-network/scripts/bootstrap.sh) script will download binaries, tools and docker images for the simple (private) network. In the process, docker will download the images and tag them to latest. Tools will be installed in your network's bin directory. Optinally, you can specify the version tag for IPFSfB images. By default, version is 0.1.0.
 
 ``` bash
 curl -sSL https://bit.ly/snetboot | bash -s <version>
@@ -125,7 +125,7 @@ Now we are in private network, with the swarm key file shared to container `peer
 
 ### 2. P2S
 
-P2S scenario is enabled global network address for the server's profile, which will export your current host machine address to the containers address. You can refer to the network settings in the p2s [env](https://github.com/IBM/IPFSfB/blob/master/samples/simple-network/p2s/.env) file.
+P2S scenario is enabled global network address for the server's profile, which will export your current host machine address to the containers address. You can refer to the network settings in the p2s [env](../../samples/simple-network/p2s/.env) file.
 
 Go to the p2s folder.
 
@@ -212,11 +212,11 @@ You should see the message - running a private network with a swarm key file, an
 
 Now we are in private network, with the swarm key file shared to container `server.example.com` and container `peer.example.com`.
 
-Additionaly, the `server.example.com` api and gateway can be accessed from `peer.example.com` or any others in the network, as we enabled global api and gateway settings for the server in [config.sh](https://github.com/IBM/IPFSfB/blob/master/samples/simple-network/config.sh).
+Additionaly, the `server.example.com` api and gateway can be accessed from `peer.example.com` or any others in the network, as we enabled global api and gateway settings for the server in [config.sh](../../samples/simple-network/config.sh).
 
 ### 3. P2SP
 
-P2SP scenario is enabled global network address for the server's profile, which will export your current host machine address to the containers address. You can refer to the network settings in the p2sp [env](https://github.com/IBM/IPFSfB/blob/master/samples/simple-network/p2sp/.env) file.
+P2SP scenario is enabled global network address for the server's profile, which will export your current host machine address to the containers address. You can refer to the network settings in the p2sp [env](../../samples/simple-network/p2sp/.env) file.
 
 Go to the p2sp folder.
 
@@ -335,4 +335,4 @@ You should see the message - running a private network with a swarm key file, an
 
 Now we are in private network, with the swarm key file shared to container `server.example.com`, container `peer0.example.com` and container `peer1.example.com`.
 
-Additionaly, the `server.example.com` api and gateway can be accessed from `peer0.example.com` or `peer1.example.com` or any others in the network, as we enabled global api and gateway settings for the server in [config.sh](https://github.com/IBM/IPFSfB/blob/master/samples/simple-network/config.sh).
+Additionaly, the `server.example.com` api and gateway can be accessed from `peer0.example.com` or `peer1.example.com` or any others in the network, as we enabled global api and gateway settings for the server in [config.sh](../../samples/simple-network/config.sh).

@@ -22,11 +22,11 @@ services:
       - CORE_VM_DOCKER_HOSTCONFIG_NETWORKMODE=${COMPOSE_PROJECT_NAME}_p2sp
       - IPFS_LOGGING=ERROR
       - IPFS_PROFILE=server
-    working_dir: /opt/go/src/github.com/ipfsfb/p2sp/server
+    working_dir: /opt/gopath/src/github.com/IBM/IPFSfB/p2sp/server
     volumes:
-      - ../../config.sh:/opt/go/src/github.com/ipfsfb/p2sp/server/config.sh
-      - ../../artifacts:/opt/go/src/github.com/ipfsfb/p2sp/server/artifacts
-      - ../../e2e:/opt/go/src/github.com/ipfsfb/p2sp/server/e2e
+      - ../../config.sh:/opt/gopath/src/github.com/IBM/IPFSfB/p2sp/server/config.sh
+      - ../../artifacts:/opt/gopath/src/github.com/IBM/IPFSfB/p2sp/server/artifacts
+      - ../../e2e:/opt/gopath/src/github.com/IBM/IPFSfB/p2sp/server/e2e
       - ../../.ipfs/staging:/var/ipfsfb/staging
       - ../../.ipfs/data:/var/ipfsfb/data
     command: bash -c "./config.sh init -p server && ./config.sh daemon -m"

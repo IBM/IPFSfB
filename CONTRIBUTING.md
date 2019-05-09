@@ -23,6 +23,4 @@ submitting your pull request.
 
 ## Documentation
 
-Refer to [docs](https://github.com/IBM/IPFSfB/tree/master/docs).
-
-## Community
+Refer to [docs](docs).

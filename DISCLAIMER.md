@@ -1,3 +1,3 @@
 # Disclaimer
 
-DISCLAIMER: The idea of this project, IPFSfB, initially is from a storage feature for storing unstructured data for Hyperledger Fabric in a supply chain solution from IBM CVI Blockchain Innovation Team.
+DISCLAIMER: The idea of this project, IPFSfB, initially is from a storage feature for storing unstructured data for Hyperledger Fabric in a supply chain solution from IBM CVI Blockchain Innovation Team. However, the version, usage, design, and architecture of IPFSfB and original storage feature are completely different, and which cannot guarantee that the original can functioning as well.

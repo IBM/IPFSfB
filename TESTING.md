@@ -6,4 +6,4 @@ Currently we are offering end-to-end testing for simple network scenarios (p2p, 
 
 ## E2E testing
 
-Refer to [test.sh](https://github.com/IBM/IPFSfB/blob/master/samples/simple-network/e2e/test.sh).
+Refer to [test.sh](samples/simple-network/e2e/test.sh).
