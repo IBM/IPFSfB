@@ -38,7 +38,7 @@ Building from source with IPFSfB repository:
 go get -u github.com/IBM/IPFSfB
 ```
 
-Building from souce with IPFSfB tools, once the repository is downloaded, run:
+Building from source with IPFSfB tools, once the repository is downloaded, run:
 
 ``` bash
 make swarmkeygen

@@ -10,7 +10,7 @@ When contributing to this repository, please first discuss the change you wish t
 
 * Hengming (5sWind) Zhang - hengmzh@cn.ibm.com
 
-## Pull Requests 
+## Pull Requests
 
 To contribute code, documentation, or tests, please submit a pull request to
 the GitHub repository. The pull request template includes a disclaimer based

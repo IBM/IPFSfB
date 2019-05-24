@@ -25,6 +25,11 @@ BASE_VERSION = 0.1.0
 IMAGE_VERSION = 0.1.0
 COMMIT_VERSION ?= $(shell git rev-parse --short HEAD)
 
+DOCKER_NS = ipfsfb
+BASE_DOCKER_NS = ipfs
+DOCKER_TAG = 0.1.0
+DOCKER_IMAGES = $(shell echo $(DOCKER_BUILD) | xargs -n1 docker images -q)
+
 BUILD_DIR ?= $(shell pwd)/.build
 GOBIN = $(GOPATH)/bin
 GO_VER = $(shell grep -A1 'go:' .travis.yml | grep -v "go:" | cut -d'-' -f2- | cut -d' ' -f2-)
@@ -40,16 +45,16 @@ PROJECT_VER = ReleaseVersion=$(BASE_VERSION)
 PROJECT_VER += ImageVersion=$(IMAGE_VERSION)
 PROJECT_VER += CommitSHA=$(COMMIT_VERSION)
 
-GO_LDFLAGS = $(patsubst %, -X $(PROJECT_PATH)/release.%,$(PROJECT_VER))
-
-export GO_LDFLAGS
+GO_LDFLAGS = $(patsubst %, -X $(PROJECT_PATH)/release.%, $(PROJECT_VER))
+DOCKER_BUILD = $(patsubst %, $(DOCKER_NS)/$(BASE_DOCKER_NS)-%:$(DOCKER_TAG), $(IMAGES))
+BASE_DOCKER_BUILD = $(patsubst %, $(DOCKER_NS)/$(BASE_DOCKER_NS)-%, $(IMAGES))
 
 pkgmap.swarmkeygen := $(PROJECT_PATH)/cmd/swarmkeygen
 pkgmap.ipfs        := github.com/ipfs
 
-.PHONY: all ipfs swarmkeygen clean
+.PHONY: all ipfs swarmkeygen docker clean
 
-all: ipfs swarmkeygen
+all: ipfs swarmkeygen docker
 
 ipfs:
 	go get -ldflags "$(GO_LDFLAGS)" -u $(pkgmap.$(@F))/ipfs-update
@@ -60,5 +65,9 @@ ipfs:
 swarmkeygen: 
 	go get -ldflags "$(GO_LDFLAGS)" -u $(pkgmap.$(@F))
 
+docker:
+	@echo $(BASE_DOCKER_BUILD) | xargs -n1 docker pull -a
+
 clean:
 	rm -f $(GOBIN)/ipfs $(GOBIN)/swarmkeygen
+	[ -n "$(DOCKER_IMAGES)" ] && docker rmi -f $(DOCKER_IMAGES) || true
